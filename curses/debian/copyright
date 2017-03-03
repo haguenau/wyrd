@@ -1,0 +1,30 @@
+This package was debianized by Samuel Mimram <samuel.mimram@ens-lyon.org> on
+Sun, 26 Aug 2007 21:27:14 +0200.
+
+It was downloaded from http://www.nongnu.org/ocaml-tmk/
+
+Upstream Authors: Nicolas George, Richard Jones
+
+Copyright (c) 2003-2007 Nicolas George, Richard Jones.
+
+License:
+
+    This package is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This package is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this package; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+On Debian systems, the complete text of the GNU Lesser General
+Public License can be found in `/usr/share/common-licenses/LGPL'.
+
+The Debian packaging is (C) 2007, Samuel Mimram <smimram@debian.org> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

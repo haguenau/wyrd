@@ -1,0 +1,70 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+include /usr/share/ocaml/ocamlvars.mk
+include /usr/share/ocaml/ocamlinit.mk
+include /usr/share/dpatch/dpatch.make
+
+DESTDIR = $(CURDIR)/debian/tmp/$(OCAML_STDLIB_DIR)
+
+MYCFLAGS = "-O2 -g -fPIC -DHAVE_CONFIG_H"
+
+build: patch ocamlinit build-stamp
+build-stamp:
+	dh_testdir
+
+	chmod +x configure
+	./configure 
+	$(MAKE) CFLAGS=$(MYCFLAGS) byte
+ifneq ($(OCAML_OPT_ARCH),)
+	$(MAKE) CFLAGS=$(MYCFLAGS) opt
+endif
+	$(MAKE) htdoc
+
+	touch build-stamp
+
+clean: unpatch ocamlinit-clean
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	if test -f Makefile; then $(MAKE) distclean; fi
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	mkdir -p $(DESTDIR)
+	$(MAKE) install OCAMLFIND_DESTDIR=$(DESTDIR) OCAMLFIND_LDCONF=ignore
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs CHANGES
+	dh_installdocs
+	dh_installexamples
+	dh_install --list-missing
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_ocaml
+	dh_gencontrol 
+	dh_md5sums
+	dh_builddeb
+
+binary-indep:
+
+binary: binary-arch
+.PHONY: build clean binary-indep binary-arch binary install ocamlinit patch unpatch

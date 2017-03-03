@@ -1,0 +1,227 @@
+#
+# sample Makefile for Objective Caml
+# Copyright (C) 2001 Jean-Christophe FILLIATRE
+#
+# modified 10/26/2003 by Paul Pelzl, for the purpose of building Orpie
+# modified 03/28/2005 by Paul Pelzl, for the purpose of building Wyrd
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License version 2, as published by the Free Software Foundation.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# 
+# See the GNU Library General Public License version 2 for more details
+# (enclosed in the file LGPL).
+
+# where to install the binaries, rcfiles, manpages, etc.
+prefix      = @prefix@
+exec_prefix = @exec_prefix@
+sysconfdir  = @sysconfdir@
+datarootdir = @datarootdir@
+BINDIR      = $(DESTDIR)/@bindir@
+MANDIR      = $(DESTDIR)/@mandir@
+
+# other variables set by ./configure
+OCAMLC       = @OCAMLC@
+OCAMLOPT     = @OCAMLOPT@
+OCAMLDEP     = @OCAMLDEP@
+OCAMLLIB     = @OCAMLLIB@
+OCAMLBEST    = @OCAMLBEST@
+OCAMLLEX     = @OCAMLLEX@
+OCAMLYACC    = @OCAMLYACC@
+OCAMLVERSION = @OCAMLVERSION@
+OCAMLWIN32   = @OCAMLWIN32@
+EXE          = @EXE@
+DEFS         = @DEFS@
+CC           = @CC@
+CFLAGS       = @CFLAGS@
+CPPFLAGS     = @CPPFLAGS@
+LDFLAGS      = @LDFLAGS@
+INSTALL      = @INSTALL@
+
+
+INCLUDES = -I ./curses
+BFLAGS   = -pp camlp4o -g $(INCLUDES)
+OFLAGS   = -pp camlp4o -g $(INCLUDES)
+DEPFLAGS = -pp camlp4o
+
+# main target
+#############
+
+NAME = wyrd
+
+all: $(NAME)
+
+$(NAME): $(OCAMLBEST)
+	rm -f $(NAME) && ln -s $(NAME).$(OCAMLBEST) $(NAME)
+
+
+# bytecode and native-code compilation
+######################################
+
+CMO = install.cmo version.cmo utility.cmo rcfile.cmo time_lang.cmo interface.cmo cal.cmo \
+		remind.cmo interface_draw.cmo interface_main.cmo locale.cmo main.cmo
+CMX = $(CMO:.cmo=.cmx)
+CMA = str.cma unix.cma
+CMXA = $(CMA:.cma=.cmxa)
+
+COBJS = locale_wrap.o
+
+CURSES_CMA  = curses/curses.cma
+CURSES_CMXA = curses/curses.cmxa
+
+GENERATED = version.ml
+
+byte: $(NAME).byte
+opt: $(NAME).opt
+
+$(NAME).byte: $(COBJS) $(CURSES_CMA) $(CMO)
+	$(OCAMLC) $(BFLAGS) -o $@ $(CURSES_CMA) $(COBJS) $(CMA) $(CMO) 
+
+$(NAME).opt: $(COBJS) $(CURSES_CMXA) $(CMX)
+	$(OCAMLOPT) $(OFLAGS) -o $@ $(CURSES_CMXA) $(COBJS) $(CMXA) $(CMX)
+
+
+VERSION=1.4.6
+
+version.ml: Makefile
+	echo "let version = \""$(VERSION)"\"" > version.ml
+	echo "let date = \""`date`"\"" >> version.ml
+
+
+$(CURSES_CMA) $(CURSES_CMXA) .stamp_built_curses:
+	$(MAKE) -C curses byte opt && touch .stamp_built_curses
+
+$(CMO) $(CMX): .stamp_built_curses
+
+
+# The curses build script does not respond well to getting invoked
+# by simultaneous processes.
+.NOTPARALLEL:
+
+
+# installation
+##############
+
+install-indep: 
+	mkdir -p $(BINDIR)
+	mkdir -p $(DESTDIR)/$(sysconfdir)
+	mkdir -p $(MANDIR)/man1
+	mkdir -p $(MANDIR)/man5
+	$(INSTALL) -m 644 wyrdrc $(DESTDIR)/$(sysconfdir)
+	$(INSTALL) -m 644 doc/wyrd.1 $(MANDIR)/man1/wyrd.1
+	$(INSTALL) -m 644 doc/wyrdrc.5 $(MANDIR)/man5/wyrdrc.5
+
+install: install-indep
+	$(INSTALL) -m 755 $(NAME).$(OCAMLBEST) $(BINDIR)
+	mv $(BINDIR)/$(NAME).$(OCAMLBEST) $(BINDIR)/$(NAME)
+
+install-byte: install-indep
+	$(INSTALL) -m 755 $(NAME).byte $(BINDIR)
+	mv $(BINDIR)/$(NAME).byte $(BINDIR)/$(NAME)
+
+install-opt: install-indep
+	$(INSTALL) -m 755 $(NAME).opt $(BINDIR)
+	mv $(BINDIR)/$(NAME).opt $(BINDIR)/$(NAME)
+
+uninstall:
+	rm -f $(BINDIR)/$(NAME)$(EXE)
+	rm -f $(DESTDIR)/$(sysconfdir)/wyrdrc
+	rm -f $(MANDIR)/man1/wyrd.1
+	rm -f $(MANDIR)/man5/wyrdrc.5
+
+
+# generic rules
+###############
+
+.SUFFIXES:
+
+
+# generic build rules for toplevel directory
+%.cmi : %.mli
+	$(OCAMLC) -c $(BFLAGS) $<
+
+%.cmo : %.ml
+	$(OCAMLC) -c $(BFLAGS) $<
+
+%.o : %.ml
+	$(OCAMLOPT) -c $(OFLAGS) $<
+
+%.cmx : %.ml
+	$(OCAMLOPT) -c $(OFLAGS) $<
+
+%.ml : %.mll
+	$(OCAMLLEX) $<
+
+%.ml : %.mly
+	$(OCAMLYACC) -v $<
+
+%.mli : %.mly
+	$(OCAMLYACC) -v $<
+
+%.o : %.c
+	$(OCAMLC) -c $<
+
+
+# Emacs tags
+############
+
+tags:
+	find . -name "*.ml*" | sort -r | xargs \
+	etags "--regex=/let[ \t]+\([^ \t]+\)/\1/" \
+	      "--regex=/let[ \t]+rec[ \t]+\([^ \t]+\)/\1/" \
+	      "--regex=/and[ \t]+\([^ \t]+\)/\1/" \
+	      "--regex=/type[ \t]+\([^ \t]+\)/\1/" \
+              "--regex=/exception[ \t]+\([^ \t]+\)/\1/" \
+	      "--regex=/val[ \t]+\([^ \t]+\)/\1/" \
+	      "--regex=/module[ \t]+\([^ \t]+\)/\1/"
+
+# vi tags
+#########
+
+vtags:
+	otags -vi -o tags *.ml
+
+
+# Makefile is rebuilt whenever Makefile.in or configure.ac is modified
+######################################################################
+
+Makefile: Makefile.in config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck
+
+configure: configure.ac
+	autoconf 
+
+# clean
+#######
+
+partly-clean::
+	rm -f *.cm[iox] *.o *.a *~
+	rm -f $(GENERATED)
+	rm -f $(NAME) $(NAME).byte $(NAME).opt
+	rm -f *.aux *.log $(NAME).tex $(NAME).dvi $(NAME).ps
+
+curses-clean::
+	$(MAKE) -C curses clean && rm -f .stamp_built_curses
+
+clean:: partly-clean curses-clean
+
+dist-clean distclean:: clean
+	rm -f Makefile config.cache config.log config.status install.ml
+
+
+# depend
+########
+
+depend::
+	$(OCAMLDEP) -pp camlp4o $(INCLUDES) *.ml *.mli > depend
+
+include depend
+
+

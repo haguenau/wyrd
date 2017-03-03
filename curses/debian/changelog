@@ -1,0 +1,59 @@
+ocaml-curses (1.0.3-1build1) lucid; urgency=low
+
+  * No-change rebuild for OCaml 3.11.2 transition (LP: #526073).
+
+ -- Ilya Barygin <barygin@gmail.com>  Wed, 24 Feb 2010 23:02:12 +0300
+
+ocaml-curses (1.0.3-1) unstable; urgency=low
+
+  * New upstream release (Closes: #528838, #550377)
+  * Use dh-ocaml 0.9.1 features
+  * Upgrade Standards-Version to 3.8.3 (README.source, section ocaml)
+  * Add myself to Uploaders and set Maintainer to 'Debian OCaml
+    Maintainers'
+  * Clean up file left after build
+  * Add .doc-base file for API documentation
+  * Remove byte.dpatch, add run_autoconf.dpatch to create configure and
+    config.h.in
+
+ -- Sylvain Le Gall <gildor@debian.org>  Wed, 16 Dec 2009 23:49:58 +0000
+
+ocaml-curses (1.0.2-3) unstable; urgency=low
+
+  [ Stephane Glondu ]
+  * Switch packaging to git.
+
+  [ Samuel Mimram ]
+  * Rebuild with OCaml 3.11.
+  * Use dh-ocaml.
+  * Update compat to 7.
+  * Update standards version to 3.8.0.
+  * Add Homepage field.
+
+ -- Samuel Mimram <smimram@debian.org>  Sun, 01 Mar 2009 21:10:25 +0100
+
+ocaml-curses (1.0.2-2) unstable; urgency=low
+
+  * Using dpatch to handle patches.
+  * Added byte.dpatch to really fix the FTBFS on non-native archs.
+
+ -- Samuel Mimram <smimram@debian.org>  Wed, 10 Oct 2007 10:53:14 +0000
+
+ocaml-curses (1.0.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Should build cleanly on non-native archs, closes: #442229.
+
+ -- Samuel Mimram <smimram@debian.org>  Tue, 09 Oct 2007 12:04:37 +0000
+
+ocaml-curses (1.0.1-2) unstable; urgency=low
+
+  * Rebuild with OCaml 3.10.
+
+ -- Samuel Mimram <smimram@debian.org>  Mon, 10 Sep 2007 02:06:50 +0200
+
+ocaml-curses (1.0.1-1) unstable; urgency=low
+
+  * Initial release, closes: #439711.
+
+ -- Samuel Mimram <smimram@debian.org>  Mon, 27 Aug 2007 16:28:28 +0200

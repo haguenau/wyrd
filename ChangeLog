@@ -1,0 +1,309 @@
+Wyrd ChangeLog
+--------------------------------------------------------------------------------
+
+2013-02-02     Release 1.4.6:
+
+    * Fixed a failure to quote filenames in the editor commands provided by
+      the default wyrdrc.
+
+    * Fixed a crash when the terminal is resized while wyrd is executing an
+      external editor or browser.  (In some environments, this would happen
+      every time a reminder file is edited.)
+
+    * Fixed 'configure' errors when compiling with OCaml 4.
+
+    * Added Oasis metadata.
+
+    * Added automatic refresh of the display when reminder files are modified.
+
+    * Added a backtrace printout for unhandled exceptions.
+
+    * Fixed a parallel-make race conditoin resulting from integration of
+      upstream ocaml-curses.
+
+    * Fixed a crash when the terminal is resized.
+
+    * Fixed some crashes which could be triggered by pressing arrow keys or
+      entering non-printable characters from the "quick add" entry field.
+
+2010-10-23     Release 1.4.5:
+
+    * Switched from personal fork of OCaml curses bindings to the
+      community-maintained library from http://www.nongnu.org/ocaml-tmk/ .
+
+    * Fixed bug which prevented "quick add" feature from accepting UTF-8
+      encoded text.
+
+    * Implemented improved support for Remind's new "reminder directory"
+      capability.
+
+2008-02-21     Release 1.4.4:
+
+    * Fixed an instance of insecure tempfile creation.  This addresses a
+      security vulnerability that had the potential to cause data loss.
+
+2007-08-17     Release 1.4.3:
+
+    * Modified the configure script to support weird locations of ncurses
+      term.h .
+
+    * Deprecated the 'calendar_selection' colorable object.  For consistency
+      with the rest of the Wyrd interface, the selected calendar day is now
+      rendered in reverse video.
+
+    * Added the 'untimed_bold' configuration variable for selecting between
+      normal and boldface rendering of untimed reminders.
+
+    * Added support for remind's 'filedir()' function within INCLUDE
+      directives, for those who like to "INCLUDE
+      [filedir()]/some-extra-reminders".  Thanks to Stefan Wehr for the patch.
+               
+    * Implemented more extensive shell-expansion of filenames specified within
+      wyrdrc, enabling the use of idioms like 'set
+      reminders_file="$DOT_REMINDERS"'.
+
+    * Added support for Remind 3.1.0 advance warning of reminders throughout
+      the Wyrd interface, enabled via the 'advance_warning' configuration
+      variable.
+
+    * Support new Remind 3.1.0 date formatting.
+
+2007-05-25     Release 1.4.2:
+
+    * Added the untimed_window_width rcfile option, which lets the user set
+      the width of the windows on the right side of the display.
+               
+    * Tweaked the resize handler so Wyrd does not completely die when the
+      terminal is resized too small.
+               
+    * Made modifications to support rendering UTF-8 reminders (requires
+      ncurses built with wide char support)
+
+    * the home_sticky option, allowing the cursor position to automatically
+      track the current time.
+
+    * Added command-line option to append reminders using the natural language
+      parser.
+
+    * Eliminated dependence on Bash-style tilde expansion.
+
+2006-07-16     Release 1.4.1:
+
+    * Fixed the "blank screen" bug that resulted from I/O buffering
+      synchronization issues.
+
+    * Fixed an error with registering certain color schemes.  
+
+    * Corrected typo in the word "July".  
+
+    * Added the 'quick_date_US' option, allowing users to choose between
+      "month first" or "day first" conventions when entering quick reminders
+      with numeric dates.
+
+2006-06-26     Release 1.4.0:
+
+    * Added the 'default' color specifier, which accesses the default terminal
+      foreground and background colors.  (A 'default' background color also
+      enables background transparency on terminal emulators which support it.)
+               
+    * Reduced the minimum terminal height to 23 lines, so screen(1) users
+      should always be able to use a status bar.
+
+    * Fixed a bug that caused events with zero duration to overlap.
+      Implemented "quick reminder" command, allowing the user to quickly
+      describe an event using natural language (USA English, at least).
+
+    * Changed the substitution strings used within wyrdrc, to prevent
+      namespace collisions with Remind's substitution filter.  (This breaks
+      compatibility with old wyrdrc files.)
+
+    * Corrected a bug in the chronological ordering of untimed reminders.
+
+    * Added some checks to prevent scrolling outside the acceptable date
+      range.
+
+    * Implemented optional ISO-8601 week numbering.  Made some corrections to
+      the coloring code.
+
+    * Code cleanup.  
+
+    * Remind errors are now handled somewhat sanely.  
+
+2006-02-24     Release 1.3.0:
+
+    * Set the default editor to $EDITOR.  
+
+    * Errors are now detected when launching an editor.  
+
+    * Improved the Remind version detection within the build script.  
+
+    * Implemented the 'goto' operation, which allows the user to manually
+      enter a date and then jump immediately to that day.  The boolean option
+      'goto_big_endian' selects whether dates are represented using YYYYMMDD
+      or DDMMYYYY format.
+
+    * Implemented the 'cut', 'copy', and 'paste' operations, which provide a
+      convenient interface to duplicate or reschedule reminders.
+
+    * The 'edit_any' command now spawns a selection dialog only when the user
+      has multiple reminder files.
+
+2005-11-20     Release 1.2.0:
+
+    * Added the 'busy_algorithm' and 'untimed_duration' configuration
+      variables, which can be used to set the algorithm for determining the
+      "busy" level for each day on the month calendar.  There are two
+      algorithms to choose from: count number of triggered reminders per day,
+      or count number of hours of reminders per day.
+
+    * The configuration script now checks for acceptable versions of OCaml and
+      Remind.
+
+    * Corrected the build script to support parallel make once again.  
+
+    * Replaced the deprecated "tail -1" syntax in the configure script.
+
+    * Fixed an off-by-one error in the resize handler, which could cause the
+      Wyrd status line to appear on two different lines.
+
+    * Fixed a bug that could cause find_next and next_reminder to fail.
+
+    * Added the configuration variable 'remind_command', which can be used to
+      specify the Remind executable.
+
+    * The current date and time are now highlighted within the month calendar
+      and timed reminders window, according to the color values set for
+      'calendar_today' and 'timed_current'.  (The selected date is now
+      highlighted in the calendar window according to the 'calendar_selection'
+      setting, rather than the 'calendar_today' setting.)
+
+    * If there are multiple reminders listed in the message window, they are
+      now sorted by starting timestamp.
+
+    * Wyrd now chooses tempfile names that are unique for each user.  
+
+    * Added the 'help' command, which generates a list of all keybindings.
+
+2005-09-21     Release 1.1.1:
+
+    * Updated the build script to support the NetBSD environment.  
+
+    * Implemented a built-in calendar layout algorithm, and removed the
+      dependence on cal(1).
+
+2005-09-15     Release 1.1.0:
+
+    * Implemented the 'next_reminder' command, which jumps forward to the next
+      reminder in chronological order.
+
+    * Made 'search_next' more robust--certain edge cases are now handled
+      better.
+
+    * Improved the alignment of timestamps in the reminder description window.
+
+    * Fixed a typo in the short string representation for Tuesday.  
+
+    * Implemented the 'view_week' and 'view_month' commands, which view
+      Remind's formatted weekly or monthly calendars for the selected date.
+
+    * Implemented the 'edit_any' command and associated 'edit_any_template',
+      which can be used to edit a reminder file without selecting any
+      particular reminder.
+               
+    * The untimed reminders window now accepts focus even when there are no
+      untimed reminders.
+
+    * Executing the 'edit' command on a blank timeslot now creates a new timed
+      reminder.  Hitting 'edit' on a blank untimed reminders list creates a
+      new untimed reminder.
+               
+    * Added support for 'nodisplay' and 'noweight' TAG parameters, which can
+      be used to suppress display of reminders or give them no weight when
+      determining the "busy level" colorations on the month calendar.
+
+    * Removed nonsensical DURATION specifiers from default weekly and monthly
+      untimed reminder templates.
+               
+    * Added the 'center_cursor' option, which can be used to fix the cursor in
+      the center of the timed reminders window while scrolling.
+
+    * Fixed an assertion failure caused by entering an unprintable character
+      in a search string.
+
+2005-06-23     Release 1.0.0:
+
+    * Added a screen refresh function.  
+
+    * Implemented overlapping timed reminders and associated routines for
+      handling multiple reminders in a single timeslot.  Colorable object
+      'timed_reminder' has been deprecated in favor of 'timed_reminder1'
+      through 'timed_reminder4', so that overlapping reminders can be given
+      different colors.
+
+    * Corrected the disappearing cursor bug associated with jumping between
+      days with differing numbers of untimed reminders.
+
+2005-05-04     Release 0.3.0:
+
+    * Converted the documentation to LaTeX format, with PDF, HTML, and manpage
+      targets.
+
+    * Added "new_*_dialog" commands for creating new reminders.  These
+      commands will generate a selection dialog for choosing which reminder
+      file to add the new reminder to.
+
+    * Added a bunch of generic user-defined reminder templates.  By default,
+      some of these are configured to generate weekly and monthly reminders.
+
+    * Added a beep and error message when pressing an unbound key.  
+
+    * Start and end times in the description window had been rendered
+      according to the value of schedule_12_hour; now they are rendered
+      according to the value of new variable description_12_hour .
+
+    * a rare bug that could cause timed reminders to become temporarily
+      invisible at month boundaries.
+
+    * Optimized rendering of timed reminders window when scrolling (should be
+      a little smoother now on slow hardware).
+
+2005-04-26     Release 0.2.0:
+
+    * Made colors configurable via the rcfile.  
+
+    * Made time representation (12/24 hour) configurable via the rcfile.
+
+    * Implemented external viewing of triggered reminders ("rem -q -g") via
+      less(1).
+
+    * Added a resize handler.  
+
+    * Added a configuration variable to switch the first day of the week
+      between Sunday and Monday.
+
+    * Wyrd now accepts an optional reminders file as a command-line parameter.
+
+2005-04-16     Release 0.1.3:
+
+    * A more suitable error message is generated when trying to run Wyrd on
+      terminals without color support.
+
+    * Wyrd now discards exceptions due to errors on curs_set(), which is not
+      supported in all terminals.
+
+    * Made installation script portable to BSD install(1).  
+
+2005-04-15     Release 0.1.2:
+
+    * Upon further investigation, cpp appears to be completely broken on OS X.
+      Wyrd now ships with pre-preprocessed ML files.
+
+2005-04-15     Release 0.1.1:
+
+    * Changed invocations of 'cpp' to 'cpp -P' to correct compilation errors
+      on OS X, maybe others.
+
+2005-04-15     Release 0.1.0:
+
+    * Initial release.
+

@@ -1,0 +1,29 @@
+cal.cmo: utility.cmo 
+cal.cmx: utility.cmx 
+install.cmo: 
+install.cmx: 
+interface.cmo: rcfile.cmo ./curses/curses.cmi 
+interface.cmx: rcfile.cmx ./curses/curses.cmx 
+interface_draw.cmo: utility.cmo remind.cmo rcfile.cmo interface.cmo \
+    ./curses/curses.cmi cal.cmo 
+interface_draw.cmx: utility.cmx remind.cmx rcfile.cmx interface.cmx \
+    ./curses/curses.cmx cal.cmx 
+interface_main.cmo: utility.cmo time_lang.cmo remind.cmo rcfile.cmo \
+    interface_draw.cmo interface.cmo ./curses/curses.cmi 
+interface_main.cmx: utility.cmx time_lang.cmx remind.cmx rcfile.cmx \
+    interface_draw.cmx interface.cmx ./curses/curses.cmx 
+locale.cmo: locale.cmi 
+locale.cmx: locale.cmi 
+main.cmo: time_lang.cmo rcfile.cmo locale.cmi interface_main.cmo \
+    interface.cmo ./curses/curses.cmi 
+main.cmx: time_lang.cmx rcfile.cmx locale.cmx interface_main.cmx \
+    interface.cmx ./curses/curses.cmx 
+rcfile.cmo: utility.cmo install.cmo ./curses/curses.cmi 
+rcfile.cmx: utility.cmx install.cmx ./curses/curses.cmx 
+remind.cmo: utility.cmo rcfile.cmo cal.cmo 
+remind.cmx: utility.cmx rcfile.cmx cal.cmx 
+time_lang.cmo: rcfile.cmo 
+time_lang.cmx: rcfile.cmx 
+utility.cmo: ./curses/curses.cmi 
+utility.cmx: ./curses/curses.cmx 
+locale.cmi: 

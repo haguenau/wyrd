@@ -1,0 +1,20 @@
+Wyrd To-Do list
+----------------------------------------------------------------------------------
+
+* Consider incremental searching.
+
+* Consider an Orpie-like abbreviation syntax for inputting commands.
+
+* Consider a more compact "maximum zoom" view that eliminates spaces between
+  reminders--similar to Remind's formatted calendar, but formatted vertically
+  like Wyrd's primary display.
+
+* When LINES is sufficiently large, consider adding a bit more month context in
+  the calendar window at the upper right.
+
+* If advance warning is enabled, improve search performance by caching reminders 
+  with advance warning suppressed.
+
+
+
+# arch-tag: DO_NOT_CHANGE_13b859a4-395f-4c00-a604-d384b6490bbc 

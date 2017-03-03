@@ -1,0 +1,8 @@
+Document: libcurses-ocaml-dev-ocamldoc-api-reference
+Title: OCaml-curses  API Reference
+Abstract: API reference manual for libcurses-ocaml-dev 
+Section: Programming/OCaml
+
+Format: HTML
+Index: /usr/share/doc/libcurses-ocaml-dev/html/index.html
+Files: /usr/share/doc/libcurses-ocaml-dev/html/*

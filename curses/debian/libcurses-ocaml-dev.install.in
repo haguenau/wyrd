@@ -1,0 +1,4 @@
+@OCamlStdlibDir@/curses/META
+@OCamlStdlibDir@/curses/*.a
+@OCamlStdlibDir@/curses/*.cm*
+@OCamlStdlibDir@/curses/*.ml*

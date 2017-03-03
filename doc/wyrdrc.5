@@ -1,0 +1,698 @@
+'\" t
+.\" Manual page created with latex2man on Sat Feb  2 21:40:51 CST 2013
+.\" NOTE: This file is generated, DO NOT EDIT.
+.de Vb
+.ft CW
+.nf
+..
+.de Ve
+.ft R
+
+.fi
+..
+.TH "WYRDRC" "5" "02 February 2013" "configuration file for the Wyrd calendar application " "configuration file for the Wyrd calendar application "
+.SH NAME
+
+wyrdrc is the configuration textfile for the \fIwyrd\fP(1)
+console calendar application. 
+.PP
+.SH INTRODUCTION
+
+CAUTION: while this manpage should be suitable as a quick reference, it may 
+be subject to miscellaneous shortcomings in typesetting. The definitive 
+documentation is the user manual provided with Wyrd in PDF format. 
+.PP
+Wyrd reads a run\-configuration textfile (generally /etc/wyrdrc or 
+/usr/local/etc/wyrdrc) to determine key bindings, color schemes, 
+and many other settings. You can 
+create a personalized configuration file in $HOME/.wyrdrc, and select 
+settings that match your usage patterns. The recommended procedure is to ``include\&'' 
+the wyrdrc file provided with Wyrd 
+(see INCLUDING OTHER RCFILES), 
+and add or remove settings as desired. 
+.PP
+.SH WYRDRC SYNTAX
+
+You may notice that the wyrdrc syntax is similar to the syntax used in 
+the configuration file for the Mutt email client (muttrc). 
+.PP
+Within the wyrdrc file, strings should be enclosed in double quotes ("). 
+A double quote character inside a string may be represented by 
+\\" \&. 
+The backslash character must be represented by doubling it 
+(\\\\).
+.PP
+.SS INCLUDING OTHER RCFILES
+Syntax: include \fIfilename_string\fP
+.br 
+.br 
+This syntax can be used to include one run\-configuration file within another. 
+This command could be used to load the default wyrdrc file (probably 
+found in /etc/wyrdrc or /usr/local/etc/wyrdrc) within your 
+personalized rcfile, 
+~/.wyrdrc \&. 
+The filename string should be enclosed in quotes. 
+.PP
+.SS SETTING CONFIGURATION VARIABLES
+Syntax: set \fIvariable\fP=\fIvalue_string\fP
+.br 
+.br 
+A number of configuration variables can be set using this syntax; check 
+the CONFIGURATION VARIABLES description 
+to see a list. The variables are unquoted, but the values should be quoted strings. 
+.PP
+.SS CREATING KEY BINDINGS
+Syntax: bind \fIkey_identifier operation\fP
+.br 
+.br 
+This command will bind a keypress to execute a calendar operation. 
+The various operations, which should not be enclosed in quotes, 
+may be found in 
+the section on CALENDAR OPERATIONS. 
+Key identifiers may be specified by strings that represent a single keypress, 
+for example "m" (quotes included). The key may be prefixed with 
+"\\\\C" or "\\\\M" 
+to represent Control or Meta (Alt) modifiers, respectively; note that the 
+backslash must be doubled. A number of special keys lack single\-character 
+representations, so the following strings may be used to represent them: 
+.TP
+.B *
+"<esc>" 
+.TP
+.B *
+"<tab>" 
+.TP
+.B *
+"<enter>" 
+.TP
+.B *
+"<return>" 
+.TP
+.B *
+"<insert>" 
+.TP
+.B *
+"<home>" 
+.TP
+.B *
+"<end>" 
+.TP
+.B *
+"<pageup>" 
+.TP
+.B *
+"<pagedown>" 
+.TP
+.B *
+"<space>" 
+.TP
+.B *
+"<left>" 
+.TP
+.B *
+"<right>" 
+.TP
+.B *
+"<up>" 
+.TP
+.B *
+"<down>" 
+.TP
+.B *
+"<f1>" to "<f12>" 
+.PP
+Due to differences between various terminal emulators, this key identifier syntax may 
+not be adequate to describe every keypress. As a workaround, Wyrd will also accept key 
+identifiers in octal notation. As an example, you could use 
+\\024 
+(do \fInot\fP
+enclose it in quotes) to represent Ctrl\-T. 
+.PP
+Multiple keys may be bound to the same operation, if desired. 
+.PP
+.SS REMOVING KEY BINDINGS
+Syntax: unbind \fIkey_identifier\fP
+.br 
+.br 
+This command will remove all bindings associated with the key identifier. The 
+key identifiers should be defined using the syntax described in the previous 
+section. 
+.PP
+.SS SETTING THE COLOR SCHEME
+Syntax: color \fIobject\fP
+\fIforeground\fP
+\fIbackground\fP
+.br 
+.br 
+This command will apply the specified foreground and background colors to the 
+appropriate object. A list of colorable objects is provided in 
+the section on COLORABLE OBJECTS. 
+Wyrd will recognize the following color keywords: black, red, green, yellow, 
+blue, magenta, cyan, white, default. The default keyword allows you to 
+choose the default foreground or background colors. If you use 
+default for your background color, this will access the transparent 
+background on terminal emulators which support it. 
+.PP
+.SH CONFIGURATION VARIABLES
+
+The following configuration variables may be set as described in the SETTING 
+CONFIGURATION VARIABLES section. 
+.TP
+.B *
+remind_command 
+.br 
+Determines the command used to execute Remind. 
+.TP
+.B *
+reminders_file 
+.br 
+Controls which Remind file (or Remind directory) Wyrd will operate on. The default is 
+~/.reminders \&. 
+.TP
+.B *
+edit_old_command 
+.br 
+Controls the command used to edit a pre\-existing reminder. The special 
+strings \&'%file%\&' and \&'%line%\&' will be replaced with a 
+filename to edit and a line number to navigate to within that file. 
+.TP
+.B *
+edit_new_command 
+.br 
+Controls the command used to edit a new reminder. The special character 
+\&'%file%\&' will be replaced with a filename to edit. Ideally, this 
+command should move the cursor to the last line of the file, where the new 
+reminder template is created. 
+.TP
+.B *
+edit_any_command 
+.br 
+Controls the command used for editing a reminder file without selecting 
+any particular reminder. The special character \&'%file%\&' will be 
+replaced with a filename to edit. 
+.TP
+.B *
+timed_template 
+.br 
+Controls the format of the REM line created when editing a new 
+timed reminder. The following string substitutions will be made: 
+\&'%monname%\&' \- month name, \&'%mon%\&' \- month number, 
+\&'%mday%\&' \- day of the month, \&'%year%\&' \- year, 
+\&'%hour%\&' \- hour, \&'%min%\&' \- minute, 
+\&'%wdayname%\&' \- weekday name, \&'%wday%\&' \- weekday number. 
+.TP
+.B *
+untimed_template 
+.br 
+Controls the format of the REM line created when editing a new 
+untimed reminder. The substitution syntax is the same as for 
+timed_template. 
+.TP
+.B *
+template\fIN\fP 
+.br
+Controls the format of a generic user\-defined REM line template; 
+\fIN\fP
+may range from 0 to 9. The substitution syntax is the same as 
+for timed_template. 
+.TP
+.B *
+busy_algorithm 
+.br 
+An integer value specifying which algorithm to use for measuring how 
+busy the user is on a particular day. If busy_algorithm="1", 
+then Wyrd will simply count the total number of reminders triggered on 
+that day. If busy_algorithm="2", then Wyrd will count the 
+number of hours of reminders that fall on that day. (Untimed reminders 
+are assumed to occupy untimed_duration minutes.) 
+.TP
+.B *
+untimed_duration 
+.br 
+An integer value that specifies the assumed duration of an untimed 
+reminder, in minutes. This is used only when computing the busy level 
+with busy_algorithm="2". 
+.TP
+.B *
+busy_level1 
+.br 
+An integer value specifying the maximum number of reminders in a day 
+(with busy_algorithm="1") or maximum hours of reminders in 
+a day (with busy_algorithm="2") which will be 
+colored using the color scheme for calendar_level1. 
+.TP
+.B *
+busy_level2 
+.br 
+Same as above, using the calendar_level2 color scheme. 
+.TP
+.B *
+busy_level3 
+.br 
+Same as above, using the calendar_level2 color scheme rendered 
+in bold. 
+.TP
+.B *
+busy_level4 
+.br 
+Same as above, using the calendar_level3 color scheme. Any day 
+with more reminders than this will be rendered using the 
+calendar_level3 color scheme rendered in bold. 
+.TP
+.B *
+week_starts_monday 
+.br 
+A boolean value ("true" or "false") that determines the 
+first day of the week. 
+.TP
+.B *
+schedule_12_hour 
+.br 
+A boolean value that determines whether the timed reminders window is 
+drawn using 12\- or 24\-hour time. 
+.TP
+.B *
+selection_12_hour 
+.br 
+A boolean value that determines whether the selection information is drawn 
+with 12\- or 24\-hour time. 
+.TP
+.B *
+status_12_hour 
+.br 
+A boolean value that determines whether the current time is drawn using a 
+12\- or 24\-hour clock. 
+.TP
+.B *
+description_12_hour 
+.br 
+A boolean value that determines whether reminder start and end times are 
+drawn using 12\- or 24\-hour time in the description window. This value 
+also controls the format of timestamps in the formatted calendars 
+produced by view_week and view_month. 
+.TP
+.B *
+center_cursor 
+.br 
+A boolean value that determines how the screen and cursor move during 
+scrolling operations. When set to "true", the cursor is fixed 
+in the center of the timed reminders window, and the schedule scrolls around 
+it. When set to "false" (the default), the cursor will move up 
+and down the schedule during scrolling operations. 
+.TP
+.B *
+goto_big_endian 
+.br 
+A boolean value that determines how the the goto operation will 
+parse dates. When set to "true", date specifiers should be in 
+ISO 8601 (YYYYMMDD) format. When set to "false", date specifiers 
+should be in European style DDMMYYYY format. 
+.TP
+.B *
+quick_date_US 
+.br 
+A boolean value that determines how the quick_add operation 
+will parse numeric dates with slashes, e.g. 6/1 (or 6/1/2006). When set 
+to "true", the first number is a month and the second is the day 
+of the month (June 1). When set to "false", these meanings of 
+these two fields are switched (January 6). 
+.TP
+.B *
+number_weeks 
+.br 
+A boolean value that determines whether or not weeks should be numbered 
+within the month calendar window. Weeks are numbered according to the ISO 
+8601 standard. The ISO standard week begins on Monday, so to avoid 
+confusion it is recommended that week_starts_monday be set to 
+"true" when week numbering is enabled. 
+.TP
+.B *
+home_sticky 
+.br 
+A boolean value that determines whether or not the cursor should 
+"stick" to the "home" position. When this option is set to 
+"true", then after pressing the <home> key the 
+cursor will automatically follow the current date and time. The 
+effect is cancelled by pressing any of the navigation keys. 
+.TP
+.B *
+untimed_window_width 
+.br 
+An integer value that determines the target width of the month\-calendar 
+window and the untimed reminders window. The allowable range is 
+34 to ($COLUMNS \- 40) characters, and Wyrd will silently 
+disregard any setting outside this range. 
+.TP
+.B *
+advance_warning 
+.br 
+A boolean value that determines whether or not Wyrd should display 
+advance warning of reminders. When set to "true", Wyrd 
+will invoke Remind in a mode that generates advance warning of reminders 
+as specified in the reminder file. 
+.TP
+.B *
+untimed_bold 
+.br 
+A boolean value that determines whether or not Wyrd should render 
+untimed reminders using a bold font. 
+.PP
+For maximum usefulness, busy_level1 < busy_level2 < 
+busy_level3 < busy_level4. 
+.PP
+.SH CALENDAR OPERATIONS
+
+Every Wyrd operation can be made available to the interface using the syntax 
+described in 
+the section on CREATING KEY BINDINGS. 
+The following is a list of every available operation. 
+.PP
+.TP
+.B *
+scroll_up 
+.br 
+move the cursor up one element 
+.TP
+.B *
+scroll_down 
+.br 
+move the cursor down one element 
+.TP
+.B *
+next_day 
+.br 
+jump ahead one day 
+.TP
+.B *
+previous_day 
+.br 
+jump backward one day 
+.TP
+.B *
+next_week 
+.br 
+jump ahead one week 
+.TP
+.B *
+previous_week 
+.br 
+jump backward one week 
+.TP
+.B *
+next_month 
+.br 
+jump ahead one month 
+.TP
+.B *
+previous_month 
+.br 
+jump backward one month 
+.TP
+.B *
+home 
+.br 
+jump to the current date and time 
+.TP
+.B *
+goto 
+.br 
+begin entering a date specifier to jump to 
+.TP
+.B *
+zoom 
+.br 
+zoom in on the day schedule view (this operation is cyclic) 
+.TP
+.B *
+edit 
+.br 
+edit the selected reminder 
+.TP
+.B *
+edit_any 
+.br 
+edit a reminder file, without selecting any particular reminder 
+.TP
+.B *
+scroll_description_up 
+.br 
+scroll the description window contents up (when possible) 
+.TP
+.B *
+scroll_description_down 
+.br 
+scroll the description window contents down (when possible) 
+.TP
+.B *
+quick_add 
+.br 
+add a ``quick reminder\&'' 
+.TP
+.B *
+new_timed 
+.br 
+create a new timed reminder 
+.TP
+.B *
+new_timed_dialog 
+.br 
+same as previous, with a reminder file selection dialog 
+.TP
+.B *
+new_untimed 
+.br 
+create a new untimed reminder 
+.TP
+.B *
+new_untimed_dialog 
+.br 
+same as previous, with a reminder file selection dialog 
+.TP
+.B *
+new_template\fIN\fP 
+.br
+create a new user\-defined reminder using template\fIN\fP,
+where 
+\fIN\fP
+may range from 0 to 9 
+.TP
+.B *
+new_template\fIN\fP_dialog 
+.br
+same as previous, with a reminder file selection dialog 
+.TP
+.B *
+copy 
+.br 
+copy a reminder to Wyrd\&'s clipboard 
+.TP
+.B *
+cut 
+.br 
+delete a reminder and copy it to Wyrd\&'s clipboard 
+.TP
+.B *
+paste 
+.br 
+paste a reminder from Wyrd\&'s clipboard into the schedule 
+.TP
+.B *
+paste_dialog 
+.br 
+same as previous, with a reminder file selection dialog 
+.TP
+.B *
+switch_window 
+.br 
+switch between the day schedule window on the left, and the untimed 
+reminder window on the right 
+.TP
+.B *
+begin_search 
+.br 
+begin entering a search string 
+.TP
+.B *
+search_next 
+.br 
+search for the next occurrence of the search string 
+.TP
+.B *
+next_reminder 
+.br 
+jump to the next reminder 
+.TP
+.B *
+view_remind 
+.br 
+view the output of remind for the selected date 
+.TP
+.B *
+view_remind_all 
+.br 
+view the output of remind for the selected date, triggering all 
+non\-expired reminders 
+.TP
+.B *
+view_week 
+.br 
+view Remind\&'s formatted calendar for the week that contains the selected date 
+(the in\-calendar timestamp formats are determined by the value of description_12_hour) 
+.TP
+.B *
+view_month 
+.br 
+view Remind\&'s formatted calendar for the month that contains the selected date 
+(the in\-calendar timestamp formats are determined by the value of description_12_hour) 
+.TP
+.B *
+refresh 
+.br 
+refresh the display 
+.TP
+.B *
+quit 
+.br 
+exit Wyrd 
+.TP
+.B *
+entry_complete 
+.br 
+signal completion of search string entry or date specifier 
+.TP
+.B *
+entry_backspace 
+.br 
+delete the last character of the search string or date specifier 
+.TP
+.B *
+entry_cancel 
+.br 
+cancel entry of a search string or date specifier 
+.PP
+.SH COLORABLE OBJECTS
+
+Each of Wyrd\&'s on\-screen elements may be colored by the color scheme of your 
+choice, using the syntax defined in 
+the section on SETTING THE COLOR SCHEME. 
+The following is a list of all colorable objects. 
+.TP
+.B *
+help 
+.br 
+the help bar at the top of the screen 
+.TP
+.B *
+timed_default 
+.br 
+an empty timeslot in the day\-schedule window 
+.TP
+.B *
+timed_current 
+.br 
+the current time in the day\-schedule window (if it is visible) 
+.TP
+.B *
+timed_reminder1 
+.br 
+a nonempty timeslot in the day\-schedule window, indented to level 1 
+.TP
+.B *
+timed_reminder2 
+.br 
+a nonempty timeslot in the day\-schedule window, indented to level 2 
+.TP
+.B *
+timed_reminder3 
+.br 
+a nonempty timeslot in the day\-schedule window, indented to level 3 
+.TP
+.B *
+timed_reminder4 
+.br 
+a nonempty timeslot in the day\-schedule window, indented to level 4 
+.TP
+.B *
+untimed_reminder 
+.br 
+an entry in the untimed reminders window 
+.TP
+.B *
+timed_date 
+.br 
+the vertical date strip at the left side of the screen 
+.TP
+.B *
+selection_info 
+.br 
+the line providing date/time for the current selection 
+.TP
+.B *
+description 
+.br 
+the reminder description window 
+.TP
+.B *
+status 
+.br 
+the bottom bar providing current date and time 
+.TP
+.B *
+calendar_labels 
+.br 
+the month and weekday labels in the calendar window 
+.TP
+.B *
+calendar_level1 
+.br 
+calendar days with low activity 
+.TP
+.B *
+calendar_level2 
+.br 
+calendar days with medium activity 
+.TP
+.B *
+calendar_level3 
+.br 
+calendar days with high activity 
+.TP
+.B *
+calendar_today 
+.br 
+the current day in the calendar window (if it is visible) 
+.TP
+.B *
+left_divider 
+.br 
+the vertical line to the left of the timed reminders window 
+.TP
+.B *
+right_divider 
+.br 
+the vertical and horizontal lines to the right of the timed reminders 
+window 
+.PP
+.SH CONTACT INFO
+
+Wyrd author: Paul Pelzl <pelzlpj@gmail.com> 
+.br 
+Wyrd website: \fBhttp://pessimization.com/software/wyrd\fP
+.br 
+Wyrd project page (bug reports, code repository, etc.): \fBhttp://launchpad.net/wyrd\fP
+.br 
+.PP
+.SH MISCELLANEOUS
+
+``Wyrd is a concept in ancient Anglo\-saxon and Nordic cultures roughly 
+corresponding to fate or personal destiny.\&'' \fI\-\- Wikipedia\fP
+.PP
+.SH SEE ALSO
+
+\fIwyrd\fP(1),
+\fIremind\fP(1)
+.PP
+.SH AUTHOR
+
+This manpage is written by Paul J. Pelzl <pelzlpj@gmail.com>. 
+.\" NOTE: This file is generated, DO NOT EDIT.

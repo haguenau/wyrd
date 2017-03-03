@@ -1,0 +1,33 @@
+Source: ocaml-curses
+Section: ocaml
+Priority: optional
+Maintainer: Debian OCaml Maintainers <debian-ocaml-maint@lists.debian.org>
+Uploaders: Samuel Mimram <smimram@debian.org>, Sylvain Le Gall <gildor@debian.org>
+Build-Depends: debhelper (>= 7), dpkg-dev (>= 1.13.19), libncurses5-dev, ocaml-nox (>= 3.11), dh-ocaml (>= 0.9.1), ocaml-findlib (>= 1.2.4), dpatch
+Standards-Version: 3.8.3
+Homepage: http://www.nongnu.org/ocaml-tmk/
+Vcs-Git: git://git.debian.org/git/pkg-ocaml-maint/packages/ocaml-curses.git
+Vcs-Browser: http://git.debian.org/?p=pkg-ocaml-maint/packages/ocaml-curses.git
+
+Package: libcurses-ocaml
+Architecture: any
+Depends: ${ocaml:Depends}, ${shlibs:Depends}
+Provides: ${ocaml:Provides}
+Description: OCaml bindings for the ncurses library
+ The ncurses library provides functions to create rich text-mode
+ interfaces. This package contains the necessary files to use the ncurses
+ library in OCaml.
+ .
+ This package contains only the shared runtime stub libraries.
+
+Package: libcurses-ocaml-dev
+Architecture: any
+Depends: ${ocaml:Depends}, libncurses5-dev, libcurses-ocaml (= ${binary:Version})
+Provides: ${ocaml:Provides}
+Description: OCaml bindings for the ncurses library
+ The ncurses library provides functions to create rich text-mode
+ interfaces. This package contains the necessary files to use the ncurses
+ library in OCaml.
+ .
+ This package contains all the development stuff you need to use ocaml-curses
+ in your programs.

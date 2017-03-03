@@ -1,0 +1,23 @@
+OASISFormat: 0.2
+Name:                      wyrd
+Version:                   @WYRD_VERSION@
+Synopsis:                  curses front-end for 'remind' calendar application
+Homepage:                  http://pessimization.com/software/wyrd
+Authors:                   Paul Pelzl <pelzlpj@gmail.com>
+License:                   GPL-2.0
+LicenseFile:               COPYING
+PostConfCommand:           touch setup.data
+ConfType:                  custom (0.2)
+BuildType:                 custom (0.2)
+InstallType:               custom (0.2)
+
+XCustomConf:               ./configure
+XCustomBuild:              make
+XCustomBuildClean:         make clean
+XCustomBuildDistclean:     make distclean
+XCustomInstall:            make install
+XCustomUninstall:          make uninstall
+
+Executable wyrd
+  Path:        .
+  MainIs:      main.ml
