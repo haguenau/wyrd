@@ -613,6 +613,15 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
    let tm = Unix.localtime ts in
    (* take care of the substitution characters in remline templates *)
    let substitute template =
+      let monname_fmt =  format_of_string "%s"
+      and mon_fmt =      format_of_string "%d"
+      and mday_fmt =     format_of_string "%d"
+      and year_fmt =     format_of_string "%d"
+      and hour_fmt =     format_of_string "%02d"
+      and min_fmt =      format_of_string "%02d"
+      and wdayname_fmt = format_of_string "%s"
+      and wday_fmt =     format_of_string "%d"
+      in
       let rec substitute_aux subst_list s =
          match subst_list with
          |[] ->
@@ -622,14 +631,17 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
             substitute_aux tail new_s
       in
       substitute_aux [
-         (Str.regexp "%monname%", Utility.string_of_tm_mon tm.Unix.tm_mon);
-         (Str.regexp "%mon%", string_of_int (succ tm.Unix.tm_mon));
-         (Str.regexp "%mday%", string_of_int tm.Unix.tm_mday);
-         (Str.regexp "%year%", string_of_int (tm.Unix.tm_year + 1900));
-         (Str.regexp "%hour%", Printf.sprintf "%.2d" tm.Unix.tm_hour);
-         (Str.regexp "%min%", Printf.sprintf "%.2d" tm.Unix.tm_min);
-         (Str.regexp "%wdayname%", Utility.string_of_tm_wday tm.Unix.tm_wday);
-         (Str.regexp "%wday%", string_of_int tm.Unix.tm_wday)
+         (Str.regexp "%monname%", Printf.sprintf monname_fmt
+             (Utility.string_of_tm_mon tm.Unix.tm_mon));
+         (Str.regexp "%mon%", Printf.sprintf mon_fmt (succ tm.Unix.tm_mon));
+         (Str.regexp "%mday%", Printf.sprintf mday_fmt tm.Unix.tm_mday);
+         (Str.regexp "%year%", Printf.sprintf year_fmt
+             (tm.Unix.tm_year + 1900));
+         (Str.regexp "%hour%", Printf.sprintf hour_fmt tm.Unix.tm_hour);
+         (Str.regexp "%min%", Printf.sprintf min_fmt tm.Unix.tm_min);
+         (Str.regexp "%wdayname%", Printf.sprintf wdayname_fmt
+             (Utility.string_of_tm_wday tm.Unix.tm_wday));
+         (Str.regexp "%wday%", Printf.sprintf wday_fmt tm.Unix.tm_wday)
       ] template
    in
    try
