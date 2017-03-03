@@ -87,7 +87,7 @@ let get_terminfo_string s =
   try
     Some (tigetstr s)
   with Failure _ -> None
-  
+
 let int_list_of_string s =
   let rec aux a = function
     | -1 -> a
@@ -102,7 +102,7 @@ let construire_arbre_terminfo r =
 	  t.[1] <- '[';
 	  KeyTree.add_key r x (int_list_of_string t)
 	)
-    | None -> ()) key_list 
+    | None -> ()) key_list
 
 
 let variables v =
@@ -112,7 +112,7 @@ let variables v =
     with Not_found -> ""
   else
     ""
-  
+
 
 
 (****************************************************************************

@@ -10,7 +10,7 @@ let input_filename  = "_oasis.in" in
 let output_filename = "_oasis" in
 
 (* Extract the VERSION=x.y.z line from Makefile.in *)
-let makefile_version_number = 
+let makefile_version_number =
   let version_regex = Str.regexp "^VERSION[ \\t]*=\\([^ \\t]+\\)[ \\t]*$" in
   let lines = File.lines_of "Makefile.in" in
   let matching_line = Enum.find (fun line -> Str.string_match version_regex line 0) lines in

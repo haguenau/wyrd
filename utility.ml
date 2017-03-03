@@ -46,8 +46,8 @@ let shell_expand text =
    (* Get a list of all environment variable mappings *)
    let add_mapping env_mapping mapping_list =
       match Str.split split_regex env_mapping with
-      | key :: value :: [] -> 
-         (key, value) :: mapping_list 
+      | key :: value :: [] ->
+         (key, value) :: mapping_list
       | _ ->
          mapping_list
    in
@@ -62,11 +62,11 @@ let shell_expand text =
    in
    apply_mappings env_mappings text
 
-   
+
 (* If the filename starts with "~", substitute $HOME.  Then do shell
  * expansion on the resulting string. *)
 let expand_file filename =
-   let tilde_expansion = 
+   let tilde_expansion =
       if String.length filename >= 2 && Str.string_before filename 2 = "~/" then
          "$HOME" ^ Str.string_after filename 1
       else
@@ -105,7 +105,7 @@ let open_or_create_out_gen is_binary filename =
             begin
                try Sys.chdir d
                with Sys_error err_msg ->
-                  begin 
+                  begin
                      let _ = Sys.command ("mkdir " ^ d) in
                      Sys.chdir d
                   end
@@ -248,9 +248,9 @@ let rstrip s =
       ""
 
 let strip s = lstrip (rstrip s)
-      
 
-(* Use the shell to open a process, read all output from both stdout and stderr, 
+
+(* Use the shell to open a process, read all output from both stdout and stderr,
  * and close the pipes to the process again.  Returns a list of lines from
  * stdout, and a list of lines from stderr.
  *
@@ -291,9 +291,9 @@ let read_all_shell_command_output shell_command =
       end
    in
    (* launch the shell process *)
-   let pid = 
-      Unix.create_process "/bin/sh" [| "/bin/sh"; "-c"; shell_command |] 
-      in_read out_write err_write 
+   let pid =
+      Unix.create_process "/bin/sh" [| "/bin/sh"; "-c"; shell_command |]
+      in_read out_write err_write
    in
    (* these belong to remind, so close them off *)
    Unix.close in_read;
@@ -325,7 +325,7 @@ let utf8_width (byte : char) =
    else if c < 0xfe then 6
    else
       raise (Unicode_length_failure "illegal byte")
-   
+
 
 (* Compute the number of UTF-8 characters contained in an ocaml String. *)
 let utf8_len s =
@@ -358,7 +358,7 @@ let utf8_string_before s n =
          for i = 1 to pred num_new_bytes do
             new_bytes.[i] <- s.[byte_pos + i]
          done;
-         build_substr (substr ^ new_bytes) (succ utf8_pos) 
+         build_substr (substr ^ new_bytes) (succ utf8_pos)
             (byte_pos + num_new_bytes)
    in
    if Curses.Curses_config.wide_ncurses then

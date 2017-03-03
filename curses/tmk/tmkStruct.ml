@@ -53,7 +53,7 @@ module Class = struct
   }
 
   let all_classes = Hashtbl.create 127
-    
+
   let create n p =
     let c = { name = n; parents = p } in
     Hashtbl.add all_classes n c;

@@ -57,7 +57,7 @@ let create_windows screen =
    and timed_width    = width - cal_width
    and untimed_height = height - 1 - msg_height - err_height - cal_height
    and untimed_width  = cal_width in
-   if height >= 23 then 
+   if height >= 23 then
       if width >= 80 then {
          stdscr       = screen;
          lines        = height;
@@ -85,7 +85,7 @@ let create_windows screen =
          (endwin ();
          failwith "Wyrd requires at least an 80 column window.")
    else
-      (endwin (); 
+      (endwin ();
       failwith "Wyrd requires at least a 23 line window.")
 
 
@@ -103,8 +103,8 @@ let resize_subwins iface =
    and timed_width    = width - cal_width
    and untimed_height = height - 1 - msg_height - err_height - cal_height
    and untimed_width  = cal_width in
-   let new_scr = 
-      if height >= 23 then 
+   let new_scr =
+      if height >= 23 then
          if width >= 80 then {iface.scr with
             lines        = height;
             cols         = width;
@@ -124,7 +124,7 @@ let resize_subwins iface =
             (endwin ();
             failwith "Wyrd requires at least an 80 column window.")
       else
-         (endwin (); 
+         (endwin ();
          failwith "Wyrd requires at least a 23 line window.")
    in
    assert (wresize new_scr.help_win 2 width);
@@ -161,7 +161,7 @@ let system_retry_eintr (command : string) : Unix.process_status =
       with _ ->
          exit 127
       end
-  | pid -> 
+  | pid ->
       let rec loop_eintr () =
          try
             snd (Unix.waitpid [] pid)
@@ -170,7 +170,7 @@ let system_retry_eintr (command : string) : Unix.process_status =
       in
       loop_eintr ()
 
-     
+
 
 let drop_curses_system (command : string) : Unix.process_status =
    drop_curses_across system_retry_eintr command
@@ -179,17 +179,17 @@ let drop_curses_system (command : string) : Unix.process_status =
 (* Parse a natural language event description and append
  * the result to the specified reminders file. *)
 let append_quick_event event_spec remfile =
-   let (rem_spec, description) = 
+   let (rem_spec, description) =
       Time_lang.parse_natural_language_event event_spec
    in
    let remline =
       begin match rem_spec with
       | Time_lang.Timed (start, finish) ->
-         let date_s = 
+         let date_s =
             Printf.sprintf "REM %s %d %d " (Utility.string_of_tm_mon start.Unix.tm_mon)
             start.Unix.tm_mday (start.Unix.tm_year + 1900)
          in
-         let start_s = 
+         let start_s =
             Printf.sprintf "AT %.2d:%.2d " start.Unix.tm_hour start.Unix.tm_min
          in
          let duration_s =
@@ -203,7 +203,7 @@ let append_quick_event event_spec remfile =
          in
          date_s ^ start_s ^ duration_s ^ "MSG " ^ description ^ "\n"
       | Time_lang.Untimed timespec ->
-         let date_s = 
+         let date_s =
             Printf.sprintf "REM %s %d %d " (Utility.string_of_tm_mon timespec.Unix.tm_mon)
             timespec.Unix.tm_mday (timespec.Unix.tm_year + 1900)
          in
@@ -211,7 +211,7 @@ let append_quick_event event_spec remfile =
       end
    in
    (* append the remline to the reminders file *)
-   let remfile_channel = 
+   let remfile_channel =
       open_out_gen [Open_append; Open_creat; Open_text] 416 (Utility.expand_file remfile)
    in
    output_string remfile_channel remline;
@@ -237,7 +237,7 @@ let handle_refresh (iface : interface_state_t) reminders =
       ();
    draw_error new_iface reminders.Remind.remind_error false;
    (new_iface, reminders)
-   
+
 
 (* handle a curses resize *)
 let handle_resize (iface : interface_state_t) reminders =
@@ -274,13 +274,13 @@ let handle_resize (iface : interface_state_t) reminders =
       let _ = doupdate () in
       ({iface with resize_failed_win = Some w}, reminders)
    end
-      
-   
+
+
 
 (* Any time a new item is selected, the reminders
  * record needs updating and the screen need redrawing *)
 let handle_selection_change iface reminders track_home_setting =
-   let new_reminders = Remind.update_reminders reminders 
+   let new_reminders = Remind.update_reminders reminders
    (timestamp_of_line iface iface.left_selection) in
    let new_iface = draw_untimed iface new_reminders.Remind.curr_untimed in
    let new_iface = draw_timed new_iface new_reminders.Remind.all_timed in
@@ -293,7 +293,7 @@ let handle_selection_change iface reminders track_home_setting =
 (* Same as previous, but without calling draw_timed () or
  * draw_date_strip ().  Optimization for the scrolling case. *)
 let handle_selection_change_scroll iface reminders track_home_setting =
-   let new_reminders = Remind.update_reminders reminders 
+   let new_reminders = Remind.update_reminders reminders
    (timestamp_of_line iface iface.left_selection) in
    draw_calendar iface new_reminders;
    let new_iface = draw_untimed iface new_reminders.Remind.curr_untimed in
@@ -335,11 +335,11 @@ let handle_scrolldown_timed_nocenter (iface : interface_state_t) reminders =
       let iface2 = {
          iface with left_selection = succ iface.left_selection
       } in
-      let (new_iface, new_reminders) = 
+      let (new_iface, new_reminders) =
          handle_selection_change_scroll iface2 reminders false
       in
       (* make a two-line update to erase and redraw the cursor *)
-      let new_iface = draw_timed_try_window new_iface new_reminders.Remind.all_timed 
+      let new_iface = draw_timed_try_window new_iface new_reminders.Remind.all_timed
          iface.left_selection 2 in
       (new_iface, new_reminders)
    end else begin
@@ -348,7 +348,7 @@ let handle_scrolldown_timed_nocenter (iface : interface_state_t) reminders =
       let iface2 = {
          iface with top_timestamp = second_timestamp
       } in
-      let (new_iface, new_reminders) = 
+      let (new_iface, new_reminders) =
          handle_selection_change_scroll iface2 reminders false
       in
       (* use a curses scroll operation to shift up the timed window *)
@@ -391,7 +391,7 @@ let handle_scrolldown_timed (iface : interface_state_t) reminders =
 (* handle a "scroll down" event when the untimed window is focused *)
 let handle_scrolldown_untimed (iface : interface_state_t) reminders =
    if iface.right_selection < pred iface.scr.uw_lines then begin
-      if iface.right_selection < iface.len_untimed - 
+      if iface.right_selection < iface.len_untimed -
       iface.top_untimed then begin
          let new_iface = {
             iface with right_selection = succ iface.right_selection
@@ -400,7 +400,7 @@ let handle_scrolldown_untimed (iface : interface_state_t) reminders =
       end else
          (iface, reminders)
    end else begin
-      if iface.right_selection < iface.len_untimed - 
+      if iface.right_selection < iface.len_untimed -
       iface.top_untimed then begin
          let new_iface = {
             iface with top_untimed = succ iface.top_untimed
@@ -419,7 +419,7 @@ let handle_scrollup_timed_center (iface : interface_state_t) reminders =
    let iface2 = {
       iface with top_timestamp = prev_timestamp
    } in
-   let (new_iface, new_reminders) = 
+   let (new_iface, new_reminders) =
       handle_selection_change_scroll iface2 reminders false
    in
    (* use a curses scroll operation to shift up the timed window *)
@@ -428,7 +428,7 @@ let handle_scrollup_timed_center (iface : interface_state_t) reminders =
    Array.blit iface.timed_lineinfo 0 iface.timed_lineinfo 1
       (pred (Array.length iface.timed_lineinfo));
    (* do a two-line update to recenter the cursor *)
-   let new_iface = draw_timed_try_window new_iface new_reminders.Remind.all_timed 
+   let new_iface = draw_timed_try_window new_iface new_reminders.Remind.all_timed
       iface.left_selection 2 in
    (* draw in the new top line of the schedule *)
    let new_iface = draw_timed_try_window new_iface new_reminders.Remind.all_timed 0 1 in
@@ -445,11 +445,11 @@ let handle_scrollup_timed_nocenter (iface : interface_state_t) reminders =
       let iface2 = {
          iface with left_selection = pred iface.left_selection
       } in
-      let (new_iface, new_reminders) = 
+      let (new_iface, new_reminders) =
          handle_selection_change_scroll iface2 reminders false
       in
       (* make a two-line update to erase and redraw the cursor *)
-      let new_iface = draw_timed_try_window new_iface new_reminders.Remind.all_timed 
+      let new_iface = draw_timed_try_window new_iface new_reminders.Remind.all_timed
          (pred iface.left_selection) 2 in
       (new_iface, new_reminders)
    end else begin
@@ -458,7 +458,7 @@ let handle_scrollup_timed_nocenter (iface : interface_state_t) reminders =
       let iface2 = {
          iface with top_timestamp = prev_timestamp
       } in
-      let (new_iface, new_reminders) = 
+      let (new_iface, new_reminders) =
          handle_selection_change_scroll iface2 reminders false
       in
       (* use a curses scroll operation to shift up the timed window *)
@@ -523,7 +523,7 @@ let handle_jump (iface : interface_state_t) reminders jump_func =
    let next_tm2 = jump_func temp2 in
    let (_, normalized_tm2) = Unix.mktime next_tm2 in
    (* check that the date range is OK for both Remind and *nix *)
-   if (normalized_tm.Unix.tm_year + 1900) < 1991 || 
+   if (normalized_tm.Unix.tm_year + 1900) < 1991 ||
    (normalized_tm2.Unix.tm_year + 1900) > 2037 then begin
       draw_error iface "requested year is out of range." false;
       assert (doupdate ());
@@ -538,7 +538,7 @@ let handle_jump (iface : interface_state_t) reminders jump_func =
 
 (* handle switching window focus *)
 let handle_switch_focus (iface : interface_state_t) reminders =
-   let new_iface = 
+   let new_iface =
       match iface.selected_side with
       |Left  -> {iface with selected_side = Right}
       |Right -> {iface with selected_side = Left}
@@ -551,7 +551,7 @@ let handle_home (iface : interface_state_t) reminders =
    let curr_time = Unix.localtime ((Unix.time ()) -. (time_inc iface)) in
    let (rounded_time, _) = Unix.mktime (round_time iface.zoom_level curr_time) in
    let new_iface = {
-      iface with top_timestamp = 
+      iface with top_timestamp =
                     if !Rcfile.center_cursor then
                        rounded_time -. (time_inc iface) *. (float_of_int ((iface.scr.tw_lines / 2) - 2))
                     else
@@ -559,14 +559,14 @@ let handle_home (iface : interface_state_t) reminders =
                  top_desc        = 0;
                  selected_side   = Left;
                  left_selection  = if !Rcfile.center_cursor then (iface.scr.tw_lines / 2) - 1 else 2;
-                 right_selection = 1 
+                 right_selection = 1
    } in
    handle_selection_change new_iface reminders true
 
 
 (* handle a zoom keypress *)
 let handle_zoom (iface : interface_state_t) reminders =
-   let new_iface = 
+   let new_iface =
       let curr_ts = timestamp_of_line iface iface.left_selection in
       let curr_tm = Unix.localtime curr_ts in
       let hour_tm = {
@@ -576,21 +576,21 @@ let handle_zoom (iface : interface_state_t) reminders =
       let (hour_ts, _) = Unix.mktime hour_tm in
       match iface.zoom_level with
       |Hour ->
-         let new_top = curr_ts -. (60.0 *. 30.0 *. 
+         let new_top = curr_ts -. (60.0 *. 30.0 *.
                        (float_of_int iface.left_selection)) in {
             iface with top_timestamp = new_top;
                        top_desc      = 0;
                        zoom_level    = HalfHour
          }
       |HalfHour ->
-         let new_top = curr_ts -. (60.0 *. 15.0 *. 
+         let new_top = curr_ts -. (60.0 *. 15.0 *.
                        (float_of_int iface.left_selection)) in {
             iface with top_timestamp = new_top;
                        top_desc      = 0;
                        zoom_level    = QuarterHour
          }
       |QuarterHour ->
-         let new_top = hour_ts -. (60.0 *. 60.0 *. 
+         let new_top = hour_ts -. (60.0 *. 60.0 *.
                        (float_of_int iface.left_selection)) in {
             iface with top_timestamp = new_top;
                        top_desc      = 0;
@@ -599,7 +599,7 @@ let handle_zoom (iface : interface_state_t) reminders =
    in
    if new_iface.track_home then
       handle_home new_iface reminders
-   else 
+   else
       let new_iface = draw_timed new_iface reminders.Remind.all_timed in
       draw_date_strip new_iface;
       (new_iface, reminders)
@@ -607,7 +607,7 @@ let handle_zoom (iface : interface_state_t) reminders =
 
 
 (* handle creation of a new timed or untimed reminder *)
-let handle_new_reminder (iface : interface_state_t) reminders rem_type 
+let handle_new_reminder (iface : interface_state_t) reminders rem_type
        remfile =
    let ts = timestamp_of_line iface iface.left_selection in
    let tm = Unix.localtime ts in
@@ -633,7 +633,7 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
       ] template
    in
    try
-      let remline = 
+      let remline =
          match rem_type with
          | Timed   -> substitute !Rcfile.timed_template
          | Untimed -> substitute !Rcfile.untimed_template
@@ -659,14 +659,14 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
             end
       in
       (* append the remline to the reminders file *)
-      let remfile_channel = 
+      let remfile_channel =
          open_out_gen [Open_append; Open_creat; Open_text] 416 remfile
       in
       output_string remfile_channel remline;
       close_out remfile_channel;
       (* open the reminders file in an editor *)
       let filename_sub = Str.regexp "%file%" in
-      let command = 
+      let command =
          Str.global_replace filename_sub remfile
             !Rcfile.edit_new_command
       in
@@ -675,7 +675,7 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
       (* if the untimed list has been altered, change the focus to
        * the first element of the list *)
       let new_iface =
-         if List.length r.Remind.curr_untimed <> 
+         if List.length r.Remind.curr_untimed <>
             List.length reminders.Remind.curr_untimed then {
             iface with top_untimed = 0;
                        top_desc = 0;
@@ -689,13 +689,13 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
          if return_code <> 0 then begin
             let (new_iface, r)  = handle_refresh new_iface r in
             let _ = beep () in
-            draw_error new_iface 
+            draw_error new_iface
                "Error when launching editor; configure a different editor in ~/.wyrdrc ." false;
             assert (doupdate ());
             (new_iface, r)
          end else
             handle_refresh new_iface r
-      | _ -> 
+      | _ ->
          let (new_iface, r) = handle_refresh new_iface r in
          draw_error new_iface
             "Editor process was interrupted." false;
@@ -708,13 +708,13 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
       (iface, reminders)
 
 
-(* Search forward for the next occurrence of the current search regex.  
+(* Search forward for the next occurrence of the current search regex.
  *
  * First find the date of the occurrence, by matching on the output of 'remind
  * -n'.  For that date, recompute timed and untimed reminder lists.  Filter the
  * timed and untimed reminder lists to get only the entries falling on the
  * occurrence date.  Search through the filtered timed list first, and locate
- * the first entry that matches the regex (if any).  Then search through the 
+ * the first entry that matches the regex (if any).  Then search through the
  * filtered untimed list, and locate the first entry that matches the regex (if any).
  * If only one of the lists has a match, return that one; if both lists have a match,
  * return the one with the earlier timestamp.
@@ -728,7 +728,7 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
  * warning enabled.
  *
  * The saved search regex can be ignored by providing Some regex as the
- * override_regex parameter. 
+ * override_regex parameter.
  *
  * FIXME: This function is about five times too large. *)
 let handle_find_next (iface : interface_state_t) reminders override_regex =
@@ -744,14 +744,14 @@ let handle_find_next (iface : interface_state_t) reminders override_regex =
       let selected_ts     = (timestamp_of_line iface (succ iface.left_selection)) -. 1.0 in
       let occurrence_time = Remind.find_next search_regex selected_ts in
       (* Reminders with advance warning included *)
-      let no_advw_reminders= 
+      let no_advw_reminders=
          if !Rcfile.advance_warning then
             Remind.create_three_month ~suppress_advwarn:true occurrence_time
          else
             Remind.update_reminders reminders occurrence_time
       in
       (* Reminders with advance warning suppressed *)
-      let advw_reminders = 
+      let advw_reminders =
          if !Rcfile.advance_warning then
             Remind.update_reminders reminders occurrence_time
          else
@@ -767,7 +767,7 @@ let handle_find_next (iface : interface_state_t) reminders override_regex =
          occurrence_tm with Unix.tm_sec  = 0;
                             Unix.tm_min  = 0;
                             Unix.tm_hour = 0;
-                            Unix.tm_mday = succ occurrence_tm.Unix.tm_mday 
+                            Unix.tm_mday = succ occurrence_tm.Unix.tm_mday
       } in
       let (day_start_ts, _) = Unix.mktime temp1 in
       let (day_end_ts, _)   = Unix.mktime temp2 in
@@ -799,9 +799,9 @@ let handle_find_next (iface : interface_state_t) reminders override_regex =
                   let (rounded_time, _) = Unix.mktime (round_time iface.zoom_level tm) in
                   let new_iface =
                      (* take care of highlighting the correct untimed reminder *)
-                     if n >= iface.scr.uw_lines then 
+                     if n >= iface.scr.uw_lines then
                         if !Rcfile.center_cursor then {
-                           iface with top_timestamp   = rounded_time -. (time_inc iface) *. 
+                           iface with top_timestamp   = rounded_time -. (time_inc iface) *.
                                                         (float_of_int (iface.scr.tw_lines / 2 - 1));
                                       top_untimed     = n - iface.scr.uw_lines + 1;
                                       top_desc        = 0;
@@ -816,9 +816,9 @@ let handle_find_next (iface : interface_state_t) reminders override_regex =
                                       right_selection = pred iface.scr.uw_lines;
                                       selected_side   = Right
                         }
-                     else 
+                     else
                         if !Rcfile.center_cursor then {
-                           iface with top_timestamp   = rounded_time -. (time_inc iface) *. 
+                           iface with top_timestamp   = rounded_time -. (time_inc iface) *.
                                                         (float_of_int (iface.scr.tw_lines / 2 - 1));
                                       top_untimed     = 0;
                                       top_desc        = 0;
@@ -870,7 +870,7 @@ let handle_find_next (iface : interface_state_t) reminders override_regex =
                   (* If we find a match, then look for an identical string in
                    * the list of untimed reminders with advance warning enabled *)
                   let _ = Str.search_forward search_regex urem.Remind.ur_msg 0 in
-                  let today_untimed_advw = 
+                  let today_untimed_advw =
                      List.filter is_current_untimed advw_reminders.Remind.curr_untimed
                   in
                   check_untimed_advw urem.Remind.ur_msg today_untimed_advw 1 timed_match
@@ -884,7 +884,7 @@ let handle_find_next (iface : interface_state_t) reminders override_regex =
       let rec check_timed timed =
          match timed with
          |[] ->
-            let today_untimed_no_advw = 
+            let today_untimed_no_advw =
                List.filter is_current_untimed no_advw_reminders.Remind.curr_untimed
             in
             check_untimed_no_advw today_untimed_no_advw 1 None
@@ -894,24 +894,24 @@ let handle_find_next (iface : interface_state_t) reminders override_regex =
                   let _ = Str.search_forward search_regex trem.Remind.tr_msg 0 in
                   let tm = Unix.localtime trem.Remind.tr_start in
                   let (rounded_time, _) = Unix.mktime (round_time iface.zoom_level tm) in
-                  let new_iface = 
+                  let new_iface =
                      if !Rcfile.center_cursor then {
-                        iface with top_timestamp   = rounded_time -. (time_inc iface) *. 
+                        iface with top_timestamp   = rounded_time -. (time_inc iface) *.
                                                      (float_of_int (iface.scr.tw_lines / 2 - 1));
                                    top_desc        = 0;
                                    left_selection  = (iface.scr.tw_lines / 2) - 1;
                                    right_selection = 1;
                                    selected_side   = Left
-                        } 
+                        }
                      else {
                         iface with top_timestamp   = rounded_time -. (time_inc iface) *. 2.;
                                    top_desc        = 0;
                                    left_selection  = 2;
                                    right_selection = 1;
                                    selected_side   = Left
-                     } 
+                     }
                   in
-                  let today_untimed_no_advw = 
+                  let today_untimed_no_advw =
                      List.filter is_current_untimed no_advw_reminders.Remind.curr_untimed
                   in
                   check_untimed_no_advw today_untimed_no_advw 1 (Some (trem.Remind.tr_start, new_iface))
@@ -944,18 +944,18 @@ let handle_begin_search (iface : interface_state_t) reminders =
  *    untimed reminder in the list, then highlight the next untimed reminder.
  * 2) Otherwise, run find_next with a regexp that matches anything. *)
 let handle_next_reminder (iface : interface_state_t) reminders =
-   if iface.selected_side = Right && 
-   iface.right_selection < iface.len_untimed - iface.top_untimed then 
+   if iface.selected_side = Right &&
+   iface.right_selection < iface.len_untimed - iface.top_untimed then
       if !Rcfile.advance_warning then begin
          (* Compute the list of untimed reminders currently displayed to the user *)
-         let displayed_reminders = 
-            Remind.get_untimed_reminders_for_day reminders.Remind.curr_untimed 
+         let displayed_reminders =
+            Remind.get_untimed_reminders_for_day reminders.Remind.curr_untimed
             (timestamp_of_line iface iface.left_selection)
          in
          (* Compute the same list, with advance warnings suppressed *)
          let displayed_reminders_no_advw =
-            let reminders_no_advw = 
-               Remind.create_three_month ~suppress_advwarn:true 
+            let reminders_no_advw =
+               Remind.create_three_month ~suppress_advwarn:true
                (timestamp_of_line iface iface.left_selection)
             in
             Remind.get_untimed_reminders_for_day reminders_no_advw.Remind.curr_untimed
@@ -964,8 +964,8 @@ let handle_next_reminder (iface : interface_state_t) reminders =
          (* Index of currently selected reminder within displayed_reminders *)
          let selection_index = iface.right_selection + iface.top_untimed in
          (* Simultaneously iterate through the two lists until we reach
-          * the currently selected element.  Theoretically displayed_reminders is a 
-          * superset of displayed_reminders_no_advw with ordering preserved, so we 
+          * the currently selected element.  Theoretically displayed_reminders is a
+          * superset of displayed_reminders_no_advw with ordering preserved, so we
           * should be able to match identical elements as we go. *)
          let rec iter_match superset subset n prev_iface prev_rem =
             match superset with
@@ -981,7 +981,7 @@ let handle_next_reminder (iface : interface_state_t) reminders =
                   handle_find_next iface reminders (Some (Str.regexp ""))
                | subset_head :: subset_tail ->
                   if n > selection_index then
-                     let (next_iface, next_rem) = 
+                     let (next_iface, next_rem) =
                         handle_scrolldown_untimed prev_iface prev_rem
                      in
                      if superset_head = subset_head then
@@ -1016,7 +1016,7 @@ let handle_next_reminder (iface : interface_state_t) reminders =
 let handle_view_reminders (iface : interface_state_t) reminders trigger_all =
    let ts = timestamp_of_line iface iface.left_selection in
    let tm = Unix.localtime ts in
-   let rem_date_str = (Utility.string_of_tm_mon tm.Unix.tm_mon) ^ " " ^ 
+   let rem_date_str = (Utility.string_of_tm_mon tm.Unix.tm_mon) ^ " " ^
                       (string_of_int tm.Unix.tm_mday) ^ " " ^
                       (string_of_int (tm.Unix.tm_year + 1900)) in
    let partial_command =
@@ -1039,10 +1039,10 @@ let handle_view_reminders (iface : interface_state_t) reminders trigger_all =
 let handle_view_calendar (iface : interface_state_t) reminders week_only =
    let ts = timestamp_of_line iface iface.left_selection in
    let tm = Unix.localtime ts in
-   let rem_date_str = (Utility.string_of_tm_mon tm.Unix.tm_mon) ^ " " ^ 
+   let rem_date_str = (Utility.string_of_tm_mon tm.Unix.tm_mon) ^ " " ^
                       (string_of_int tm.Unix.tm_mday) ^ " " ^
                       (string_of_int (tm.Unix.tm_year + 1900)) in
-   let partial_command = 
+   let partial_command =
       if week_only then
          Printf.sprintf "%s -c+1 -w%d " !Rcfile.remind_command iface.scr.cols
       else
@@ -1050,9 +1050,9 @@ let handle_view_calendar (iface : interface_state_t) reminders week_only =
    in
    let time_option = if !Rcfile.description_12_hour then "-b0 " else "-b1 " in
    let weekday_option = if !Rcfile.week_starts_monday then "-m " else "" in
-   let command = 
-      partial_command ^ time_option ^ weekday_option ^ 
-      !Rcfile.reminders_file ^ " " ^ rem_date_str ^ " | less -c" 
+   let command =
+      partial_command ^ time_option ^ weekday_option ^
+      !Rcfile.reminders_file ^ " " ^ rem_date_str ^ " | less -c"
    in
    let _ = drop_curses_system command in
    handle_refresh iface reminders
@@ -1095,15 +1095,15 @@ let handle_view_keybindings (iface : interface_state_t) reminders =
 
 
 (* Handle scrolling down during selection dialog loop *)
-let handle_selection_dialog_scrolldown (elements : string list) 
+let handle_selection_dialog_scrolldown (elements : string list)
        (selection : int) (top : int) =
    if selection < pred (List.length elements) then
       let lines, cols = get_size () in
       let new_selection = succ selection in
       let new_top =
-         if new_selection - top >= pred lines then 
-            succ top 
-         else 
+         if new_selection - top >= pred lines then
+            succ top
+         else
             top
       in
       (new_selection, new_top)
@@ -1112,14 +1112,14 @@ let handle_selection_dialog_scrolldown (elements : string list)
 
 
 (* Handle scrolling up during selection dialog loop *)
-let handle_selection_dialog_scrollup (elements : string list) 
+let handle_selection_dialog_scrollup (elements : string list)
        (selection : int) (top : int) =
    if selection > 0 then
       let new_selection = pred selection in
       let new_top =
-         if new_selection < top then 
-            pred top 
-         else 
+         if new_selection < top then
+            pred top
+         else
             top
       in
       (new_selection, new_top)
@@ -1128,7 +1128,7 @@ let handle_selection_dialog_scrollup (elements : string list)
 
 
 (* Begin a selection dialog loop *)
-let do_selection_dialog (iface : interface_state_t) (title : string) 
+let do_selection_dialog (iface : interface_state_t) (title : string)
        (elements : string list) =
    let init_selection = 0
    and init_top       = 0 in
@@ -1165,20 +1165,20 @@ let handle_edit (iface : interface_state_t) reminders =
    in
    let fl =
       match iface.selected_side with
-      |Left  -> 
+      |Left  ->
          begin match iface.timed_lineinfo.(iface.left_selection) with
-         | [] -> 
+         | [] ->
             None
-         | tline :: [] -> 
+         | tline :: [] ->
             Some (tline.tl_filename, tline.tl_linenum, tline.tl_msg)
-         | rem_list -> 
+         | rem_list ->
               let sorted_rem_list = List.fast_sort sort_lineinfo rem_list in
               let get_msg tline = (adjust_s 16 tline.tl_timestr) ^ tline.tl_msg in
               let msg_list = List.rev_map get_msg sorted_rem_list in
               let selected_msg =
                  do_selection_dialog iface "Choose a reminder to edit" msg_list
               in
-              let test_msg_match tline = 
+              let test_msg_match tline =
                  ((adjust_s 16 tline.tl_timestr) ^ tline.tl_msg) = selected_msg in
               let tline = (List.find test_msg_match sorted_rem_list) in
               Some (tline.tl_filename, tline.tl_linenum, tline.tl_msg)
@@ -1196,10 +1196,10 @@ let handle_edit (iface : interface_state_t) reminders =
          handle_new_reminder iface reminders Timed main_remfile
       else
          handle_new_reminder iface reminders Untimed main_remfile
-   |Some (filename, line_num, msg) -> 
+   |Some (filename, line_num, msg) ->
       let filename_sub = Str.regexp "%file%" in
       let lineno_sub   = Str.regexp "%line%" in
-      let command_partial = 
+      let command_partial =
          Str.global_replace filename_sub filename !Rcfile.edit_old_command
       in
       let command = Str.global_replace lineno_sub line_num command_partial in
@@ -1208,7 +1208,7 @@ let handle_edit (iface : interface_state_t) reminders =
       (* if the untimed list has been altered, change the focus
        * to the first element *)
       let new_iface =
-         if List.length r.Remind.curr_untimed <> 
+         if List.length r.Remind.curr_untimed <>
             List.length reminders.Remind.curr_untimed then {
             iface with top_untimed = 0;
                        top_desc = 0;
@@ -1225,7 +1225,7 @@ let handle_edit (iface : interface_state_t) reminders =
 (* handle free editing of the reminders file *)
 let handle_edit_any (iface : interface_state_t) reminders remfile =
    let filename_sub = Str.regexp "%file%" in
-   let command = 
+   let command =
       Str.global_replace filename_sub remfile !Rcfile.edit_any_command
    in
    let _ = drop_curses_system command in
@@ -1233,7 +1233,7 @@ let handle_edit_any (iface : interface_state_t) reminders remfile =
    (* if the untimed list has been altered, change the focus
     * to the first element *)
    let new_iface =
-      if List.length r.Remind.curr_untimed <> 
+      if List.length r.Remind.curr_untimed <>
          List.length reminders.Remind.curr_untimed then {
          iface with top_untimed = 0;
                     top_desc = 0;
@@ -1267,13 +1267,13 @@ let handle_copy_reminder_aux iface reminders copy_only =
    in
    let fl =
       match iface.selected_side with
-      |Left  -> 
+      |Left  ->
          begin match iface.timed_lineinfo.(iface.left_selection) with
-         | [] -> 
+         | [] ->
             None
-         | tline :: [] -> 
+         | tline :: [] ->
             Some (tline.tl_filename, tline.tl_linenum)
-         | rem_list -> 
+         | rem_list ->
               let sorted_rem_list = List.fast_sort sort_lineinfo rem_list in
               let get_msg tline = (adjust_s 16 tline.tl_timestr) ^ tline.tl_msg in
               let msg_list = List.rev_map get_msg sorted_rem_list in
@@ -1287,7 +1287,7 @@ let handle_copy_reminder_aux iface reminders copy_only =
                  do_selection_dialog iface dialog_msg msg_list
               in
               let _ = handle_refresh iface reminders in
-              let test_msg_match tline = 
+              let test_msg_match tline =
                  ((adjust_s 16 tline.tl_timestr) ^ tline.tl_msg) = selected_msg in
               let tline = (List.find test_msg_match sorted_rem_list) in
               Some (tline.tl_filename, tline.tl_linenum)
@@ -1320,7 +1320,7 @@ let handle_copy_reminder_aux iface reminders copy_only =
          done;
          close_in in_channel;
          (* break the REM line up into chunks corresponding to the different fields *)
-         let rem_kw_regex = 
+         let rem_kw_regex =
             Str.regexp ("\\(REM\\|PRIORITY\\|SKIP\\|BEFORE\\|AFTER\\|" ^
             "OMIT\\|AT\\|SCHED\\|WARN\\|UNTIL\\|SCANFROM\\|DURATION\\|TAG\\|" ^
             "MSG\\|MSF\\|RUN\\|CAL\\|SATISFY\\|SPECIAL\\|PS\\|PSFILE\\)")
@@ -1379,7 +1379,7 @@ let handle_copy_reminder iface reminders copy_only =
 let handle_paste_reminder (iface : interface_state_t) reminders remfile =
    let ts = timestamp_of_line iface iface.left_selection in
    let tm = Unix.localtime ts in
-   let rem_datespec = 
+   let rem_datespec =
       "REM " ^ Utility.string_of_tm_mon tm.Unix.tm_mon ^ " " ^
       string_of_int tm.Unix.tm_mday ^ " " ^
       string_of_int (tm.Unix.tm_year + 1900) ^ " "
@@ -1394,14 +1394,14 @@ let handle_paste_reminder (iface : interface_state_t) reminders remfile =
    let temp        = Str.replace_first rem_regex rem_datespec iface.rem_buffer in
    let new_remline = Str.replace_first at_regex at_timespec temp in
    (* paste into the reminders file *)
-   let remfile_channel = 
+   let remfile_channel =
       open_out_gen [Open_append; Open_creat; Open_text] 416 remfile
    in
    output_string remfile_channel new_remline;
    close_out remfile_channel;
    (* open reminders file in editor *)
    let filename_sub = Str.regexp "%file%" in
-   let command = 
+   let command =
       Str.global_replace filename_sub remfile
          !Rcfile.edit_new_command
    in
@@ -1410,7 +1410,7 @@ let handle_paste_reminder (iface : interface_state_t) reminders remfile =
    (* if the untimed list has been altered, change the focus to
     * the first element of the list *)
    let new_iface =
-      if List.length r.Remind.curr_untimed <> 
+      if List.length r.Remind.curr_untimed <>
          List.length reminders.Remind.curr_untimed then {
          iface with top_untimed = 0;
                     top_desc = 0;
@@ -1466,7 +1466,7 @@ let handle_cut_reminder iface reminders =
       (* if the untimed list has been altered, change the focus to
        * the first element of the list *)
       let new_iface =
-         if List.length r.Remind.curr_untimed <> 
+         if List.length r.Remind.curr_untimed <>
             List.length reminders.Remind.curr_untimed then {
             iface with top_untimed = 0;
                        top_desc = 0;
@@ -1489,7 +1489,7 @@ let handle_goto (iface : interface_state_t) reminders =
    if not (List.mem len [2; 4; 8]) then
       failwith "length must be 2, 4, or 8 characters."
    else begin
-      let (year_s, month_s, day_s) = 
+      let (year_s, month_s, day_s) =
          if !Rcfile.goto_big_endian then
             if len = 8 then (
                String.sub iface.extended_input 0 4,
@@ -1523,7 +1523,7 @@ let handle_goto (iface : interface_state_t) reminders =
                iface.extended_input
             )
       in
-      let year  = (int_of_string year_s) - 1900 
+      let year  = (int_of_string year_s) - 1900
       and month = (int_of_string month_s) - 1
       and day   = int_of_string day_s in
       let jump_time = {
@@ -1546,7 +1546,7 @@ let handle_goto (iface : interface_state_t) reminders =
       else
          ();
       let new_iface = {
-         iface with top_timestamp = 
+         iface with top_timestamp =
                        if !Rcfile.center_cursor then
                           rounded_time -. (time_inc iface) *. (float_of_int ((iface.scr.tw_lines / 2) - 2))
                        else
@@ -1560,7 +1560,7 @@ let handle_goto (iface : interface_state_t) reminders =
       } in
       handle_selection_change new_iface reminders false
    end
-         
+
 
 (* Begin entry of a date/time to navigate to *)
 let handle_begin_goto (iface : interface_state_t) reminders =
@@ -1585,7 +1585,7 @@ let handle_quick_event (iface : interface_state_t) reminders remfile =
          | Time_lang.Untimed x    -> (false, x)
       in
       let rounded_time =
-         let rt_shift = 
+         let rt_shift =
             if is_timed then
                let (x, _) = Unix.mktime (round_time iface.zoom_level start) in x
             else
@@ -1595,7 +1595,7 @@ let handle_quick_event (iface : interface_state_t) reminders remfile =
       in
       let r = Remind.create_three_month iface.top_timestamp in
       let new_iface = {
-         iface with top_timestamp = 
+         iface with top_timestamp =
                        if !Rcfile.center_cursor then
                           rounded_time -. (time_inc iface) *. (float_of_int ((iface.scr.tw_lines / 2) - 2))
                        else
@@ -1613,7 +1613,7 @@ let handle_quick_event (iface : interface_state_t) reminders remfile =
 
 
 
-(* Begin entry of a quick event *) 
+(* Begin entry of a quick event *)
 let handle_begin_quick_event (iface : interface_state_t) reminders =
    let new_iface = {
       iface with entry_mode = Extended ExtendedQuick
@@ -1667,7 +1667,7 @@ let handle_keypress_normal key (iface : interface_state_t) reminders =
          handle_edit iface reminders
       |Rcfile.EditAny ->
          let (_, all_remfiles) = Remind.get_all_remfiles () in
-         let selected_remfile = 
+         let selected_remfile =
             (* if there's only one remfile, jump right in, otherwise
              * pop up a selection dialog *)
             if List.length all_remfiles > 1 then
@@ -1699,7 +1699,7 @@ let handle_keypress_normal key (iface : interface_state_t) reminders =
             (iface, reminders)
          end else begin
             let (_, all_remfiles) = Remind.get_all_remfiles () in
-            let selected_remfile = 
+            let selected_remfile =
                (* if there's only one remfile, jump right in, otherwise
                 * pop up a selection dialog *)
                if List.length all_remfiles > 1 then
@@ -1720,7 +1720,7 @@ let handle_keypress_normal key (iface : interface_state_t) reminders =
          let (main_remfile, _) = Remind.get_all_remfiles () in
          handle_new_reminder iface reminders Timed main_remfile
       |Rcfile.NewTimedDialog ->
-         let remfile = 
+         let remfile =
             let (_, all_remfiles) = Remind.get_all_remfiles () in
             do_selection_dialog iface "Choose a reminders file" all_remfiles
          in
@@ -1729,7 +1729,7 @@ let handle_keypress_normal key (iface : interface_state_t) reminders =
          let (main_remfile, _) = Remind.get_all_remfiles () in
          handle_new_reminder iface reminders Untimed main_remfile
       |Rcfile.NewUntimedDialog ->
-         let remfile = 
+         let remfile =
             let (_, all_remfiles) = Remind.get_all_remfiles () in
             do_selection_dialog iface "Choose a reminders file" all_remfiles
          in
@@ -1738,7 +1738,7 @@ let handle_keypress_normal key (iface : interface_state_t) reminders =
          let (main_remfile, _) = Remind.get_all_remfiles () in
          handle_new_reminder iface reminders (General x) main_remfile
       |Rcfile.NewGenReminderDialog x ->
-         let remfile = 
+         let remfile =
             let (_, all_remfiles) = Remind.get_all_remfiles () in
             do_selection_dialog iface "Choose a reminders file" all_remfiles
          in
@@ -1850,7 +1850,7 @@ let handle_keypress key (iface : interface_state_t) reminders =
                } in
                let prompt =
                   match ext_mode with
-                  |ExtendedSearch -> 
+                  |ExtendedSearch ->
                      "search expression: "
                   |ExtendedGoto ->
                      if !Rcfile.goto_big_endian then
@@ -1902,7 +1902,7 @@ let handle_keypress key (iface : interface_state_t) reminders =
             end
          |_ ->
             begin try
-               (* Only printable characters are accepted for search strings and quick events.  "Printable" 
+               (* Only printable characters are accepted for search strings and quick events.  "Printable"
                 * is defined as either "printable ASCII" or "non-ASCII UTF-8".  Hopefully this definition
                 * will satisfy ncurses. *)
                if (Curses_config.wide_ncurses && key >= 0x80) || (key >= 32 && key <= 126) then begin
@@ -1953,12 +1953,12 @@ let rec do_main_loop (iface : interface_state_t) reminders last_update =
             (iface, w)
       in
       let key = wgetch wgetch_target in
-      let new_iface, new_reminders = 
+      let new_iface, new_reminders =
          (* key = -1 is ncurses wgetch timeout error *)
          if key <> ~- 1 then
             if key = Key.resize then
                handle_resize iface reminders
-            else 
+            else
                begin match iface.resize_failed_win with
                | None   -> handle_keypress key iface reminders
                | Some w -> let _ = beep () in (iface, reminders)
@@ -1979,7 +1979,7 @@ let rec do_main_loop (iface : interface_state_t) reminders last_update =
          (* if the untimed list has been altered, change the focus to
           * the timed window *)
          let new_iface =
-            if List.length r.Remind.curr_untimed <> 
+            if List.length r.Remind.curr_untimed <>
                   List.length reminders.Remind.curr_untimed then {
                new_iface with selected_side = Left;
                               top_untimed = 0;
@@ -2011,7 +2011,7 @@ let run (iface : interface_state_t) =
    set_bkgd iface.scr.timed_win Rcfile.Timed_default;
    set_bkgd iface.scr.calendar_win Rcfile.Calendar_labels;
    set_bkgd iface.scr.untimed_win Rcfile.Untimed_reminder;
-   set_bkgd iface.scr.msg_win Rcfile.Description; 
+   set_bkgd iface.scr.msg_win Rcfile.Description;
    scrollok iface.scr.timed_win true;
    let reminders = Remind.create_three_month (iface.top_timestamp) in
    let iface = {iface with remfile_mtimes = Remind.get_remfile_mtimes ()} in
@@ -2025,7 +2025,7 @@ let run (iface : interface_state_t) =
    draw_error new_iface "" false;
    assert (doupdate ());
    do_main_loop new_iface reminders (Unix.time ())
-        
+
 
 
 

@@ -122,7 +122,7 @@ class virtual toplevel (term : TmkWidget.terminal) = object (self)
 
   method set_cursor c =
     term#set_cursor c
-    
+
 
   method class_add_descendant (w : TmkWidget.widget) =
     if w#can_focus then (

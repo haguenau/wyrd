@@ -62,7 +62,7 @@ let word_wrap (s : string) (len : int) =
                (* No choice but to break the word apart *)
                let front = utf8_string_before word len
                and back  = utf8_string_after  word len in
-               process_words (back :: remaining_words) 
+               process_words (back :: remaining_words)
                   (front :: line :: remaining_lines)
          end
    in
@@ -71,7 +71,7 @@ let word_wrap (s : string) (len : int) =
 
 (* Generate a 12-hour clock representation of a time record *)
 let twelve_hour_string tm =
-   if tm.Unix.tm_hour >= 12 then 
+   if tm.Unix.tm_hour >= 12 then
       let hour = tm.Unix.tm_hour - 12 in
       if hour = 0 then
          Printf.sprintf "12:%.2dpm" tm.Unix.tm_min
@@ -86,7 +86,7 @@ let twelve_hour_string tm =
 
 (* Generate a 12-hour clock representation of a time record, with whitespace padding *)
 let twelve_hour_string_pad tm =
-   if tm.Unix.tm_hour >= 12 then 
+   if tm.Unix.tm_hour >= 12 then
       let hour = tm.Unix.tm_hour - 12 in
       if hour = 0 then
          Printf.sprintf "12:%.2dpm" tm.Unix.tm_min
@@ -102,7 +102,7 @@ let twelve_hour_string_pad tm =
 (* Generate a 24-hour clock representation of a time record *)
 let twentyfour_hour_string tm = Printf.sprintf "%.2d:%.2d" tm.Unix.tm_hour tm.Unix.tm_min
 
-                                   
+
 (* Draw a string in a specified window and location, using exactly 'len'
  * characters and truncating with ellipses if necessary. *)
 let trunc_mvwaddstr win line col len s =
@@ -127,7 +127,7 @@ let draw_help (iface : interface_state_t) =
    wattron iface.scr.help_win (A.bold lor A.underline);
    let rec build_help_line operations s =
       match operations with
-      |[] -> 
+      |[] ->
          s
       |(op, op_string) :: tail ->
          try
@@ -136,10 +136,10 @@ let draw_help (iface : interface_state_t) =
          with Not_found ->
             build_help_line tail s
    in
-   let help_string = 
-      build_help_line [(Rcfile.ViewKeybindings, "help"); (Rcfile.NewTimed, "new timed"); 
-                       (Rcfile.NewUntimed, "new untimed"); (Rcfile.Edit, "edit"); 
-                       (Rcfile.Home, "home"); (Rcfile.Zoom, "zoom"); (Rcfile.BeginSearch, "search"); 
+   let help_string =
+      build_help_line [(Rcfile.ViewKeybindings, "help"); (Rcfile.NewTimed, "new timed");
+                       (Rcfile.NewUntimed, "new untimed"); (Rcfile.Edit, "edit");
+                       (Rcfile.Home, "home"); (Rcfile.Zoom, "zoom"); (Rcfile.BeginSearch, "search");
                        (Rcfile.Quit, "quit")] ""
    in
    trunc_mvwaddstr iface.scr.help_win 0 0 iface.scr.hw_cols help_string;
@@ -178,7 +178,7 @@ let draw_date_strip (iface : interface_state_t) =
               Unix.tm_hour = 0
          } in
          let (_, before_midnight) = Unix.mktime temp in
-         if timestamp_tm.Unix.tm_min = before_midnight.Unix.tm_min && 
+         if timestamp_tm.Unix.tm_min = before_midnight.Unix.tm_min &&
             timestamp_tm.Unix.tm_hour = before_midnight.Unix.tm_hour then
             check_timestamp ((line, timestamp) :: date_changes) next_timestamp (succ line)
          else
@@ -186,42 +186,42 @@ let draw_date_strip (iface : interface_state_t) =
    in
    let date_changes = List.rev (check_timestamp [] iface.top_timestamp 0) in
    (* generate a string to represent the vertical strip *)
-   let date_chars = 
+   let date_chars =
       if List.length date_changes > 0 then begin
          (* special case for the top date string, which is always at the
           * top of the screen *)
          let (line, timestamp) = List.hd date_changes in
          let tm = Unix.localtime timestamp in
-         let top_date_str = 
+         let top_date_str =
             if line >= 7 then
                (* the date will fit completely *)
-               (Printf.sprintf " %s %.2d" (string_of_tm_mon tm.Unix.tm_mon) 
+               (Printf.sprintf " %s %.2d" (string_of_tm_mon tm.Unix.tm_mon)
                    tm.Unix.tm_mday) ^ (String.make (line - 7) ' ')
             else
                (* there's not enough room for the date, so truncate it *)
                Str.last_chars
-               (Printf.sprintf " %s %.2d" (string_of_tm_mon tm.Unix.tm_mon) 
+               (Printf.sprintf " %s %.2d" (string_of_tm_mon tm.Unix.tm_mon)
                    tm.Unix.tm_mday) line
          in
          (* all other dates are just rendered at the top of their respective windows *)
          let rec add_date date_str changes =
             match changes with
             | [] -> date_str
-            | (line, timestamp) :: tail -> 
+            | (line, timestamp) :: tail ->
                let tm = Unix.localtime timestamp in
                let temp = {
                   tm with Unix.tm_mday = succ tm.Unix.tm_mday
                } in
                let (_, next_day) = Unix.mktime temp in
-               let s_len = 
+               let s_len =
                   if List.length tail > 0 then
                      let (next_line, _) = List.hd tail in
                      next_line - line
                   else
                      iface.scr.tw_lines - line
                in
-               let temp_s = 
-                  (Printf.sprintf "-%s %.2d" (string_of_tm_mon next_day.Unix.tm_mon) 
+               let temp_s =
+                  (Printf.sprintf "-%s %.2d" (string_of_tm_mon next_day.Unix.tm_mon)
                       next_day.Unix.tm_mday) ^ (String.make 100 ' ')
                in
                add_date (date_str ^ (Str.string_before temp_s s_len)) tail
@@ -231,8 +231,8 @@ let draw_date_strip (iface : interface_state_t) =
          (* if there are no date changes (e.g. for small window) then just grab the proper
           * date from the top_timestamp *)
          let tm = Unix.localtime iface.top_timestamp in
-         (Printf.sprintf " %s %.2d" (string_of_tm_mon tm.Unix.tm_mon) 
-             tm.Unix.tm_mday) ^ (String.make (iface.scr.tw_lines - 6) ' ') 
+         (Printf.sprintf " %s %.2d" (string_of_tm_mon tm.Unix.tm_mon)
+             tm.Unix.tm_mday) ^ (String.make (iface.scr.tw_lines - 6) ' ')
    in
    (* draw the date string vertically, one character at a time *)
    for i = 0 to pred iface.scr.tw_lines do
@@ -266,7 +266,7 @@ let draw_timed_window iface reminders top lines =
       if x >= 0.0 then int_of_float x
       else pred (int_of_float x)
    in
-   let indent_colors = [| 
+   let indent_colors = [|
       Rcfile.Timed_reminder1;
       Rcfile.Timed_reminder2;
       Rcfile.Timed_reminder3;
@@ -311,7 +311,7 @@ let draw_timed_window iface reminders top lines =
       let ts_str = string_of_tm tm in
       let curr_ts = Unix.time () in
       (* the current time is highlighted *)
-      if curr_ts >= ts && curr_ts < (timestamp_of_line iface (succ i)) then begin 
+      if curr_ts >= ts && curr_ts < (timestamp_of_line iface (succ i)) then begin
          Rcfile.color_on iface.scr.timed_win Rcfile.Timed_current;
          wattron iface.scr.timed_win A.bold
       end else
@@ -370,17 +370,17 @@ let draw_timed_window iface reminders top lines =
                tl_msg      = rem.tr_msg;
                tl_start    = rem.tr_start
             } in
-            iface.timed_lineinfo.(rem_top_line) <- 
+            iface.timed_lineinfo.(rem_top_line) <-
                (curr_lineinfo :: iface.timed_lineinfo.(rem_top_line));
-            trunc_mvwaddstr iface.scr.timed_win rem_top_line (clock_pad + (9 * indent)) 
+            trunc_mvwaddstr iface.scr.timed_win rem_top_line (clock_pad + (9 * indent))
                (iface.scr.tw_cols - clock_pad - (9 * indent)) ("  " ^ rem.tr_msg);
-            assert (mvwaddch iface.scr.timed_win rem_top_line 
+            assert (mvwaddch iface.scr.timed_win rem_top_line
                (clock_pad + (9 * indent)) acs.Acs.vline)
          end else
             ();
          (* draw any remaining lines of this reminder, as determined by the duration *)
          let count = ref 1 in
-         while 
+         while
             ((timestamp_of_line iface (rem_top_line + !count)) < rem.tr_end) &&
             (rem_top_line + !count < top + lines)
          do
@@ -388,7 +388,7 @@ let draw_timed_window iface reminders top lines =
                let time_str = get_time_str () in
                let ts = timestamp_of_line iface (rem_top_line + !count) in
                let tm = Unix.localtime ts in
-               if rem_top_line + !count = iface.left_selection && 
+               if rem_top_line + !count = iface.left_selection &&
                   iface.selected_side = Left then
                   wattron iface.scr.timed_win A.reverse
                else
@@ -405,11 +405,11 @@ let draw_timed_window iface reminders top lines =
                   tl_msg      = rem.tr_msg;
                   tl_start    = rem.tr_start
                } in
-               iface.timed_lineinfo.(rem_top_line + !count) <- 
+               iface.timed_lineinfo.(rem_top_line + !count) <-
                   (curr_lineinfo :: iface.timed_lineinfo.(rem_top_line + !count));
-               trunc_mvwaddstr iface.scr.timed_win (rem_top_line + !count) 
+               trunc_mvwaddstr iface.scr.timed_win (rem_top_line + !count)
                   (clock_pad + (9 * indent)) (iface.scr.tw_cols - clock_pad - (9 * indent)) " ";
-               assert (mvwaddch iface.scr.timed_win (rem_top_line + !count) 
+               assert (mvwaddch iface.scr.timed_win (rem_top_line + !count)
                   (clock_pad + (9 * indent)) acs.Acs.vline)
             end else
                ();
@@ -434,7 +434,7 @@ let draw_timed_window iface reminders top lines =
 
 
 (* Draw the entire timed reminders window *)
-let draw_timed iface reminders = 
+let draw_timed iface reminders =
    draw_timed_window iface reminders 0 iface.scr.tw_lines;
    {iface with last_timed_refresh = Unix.time ()}
 
@@ -457,7 +457,7 @@ let draw_timed_try_window iface reminders top lines =
 
 
 (* render a calendar for the given reminders record *)
-let draw_calendar (iface : interface_state_t) 
+let draw_calendar (iface : interface_state_t)
        (reminders : three_month_rem_t) : unit =
    let sel_tm   = Unix.localtime (timestamp_of_line iface iface.left_selection)
    and today_tm = Unix.localtime (Unix.time()) in
@@ -496,7 +496,7 @@ let draw_calendar (iface : interface_state_t)
                ()
             | el :: days ->
                begin match el with
-               |Str.Delim s -> 
+               |Str.Delim s ->
                   assert (waddstr iface.scr.calendar_win s)
                |Str.Text d ->
                   let day = pred (int_of_string d) in
@@ -558,7 +558,7 @@ let draw_calendar (iface : interface_state_t)
       Rcfile.color_off iface.scr.calendar_win Rcfile.Calendar_labels;
       let rec print_weeknum weeknums line =
          match weeknums with
-         | [] -> 
+         | [] ->
             ()
          | weeknum :: tail ->
             assert (wmove iface.scr.calendar_win (vspacer + line) weeknum_col);
@@ -594,7 +594,7 @@ let draw_untimed (iface : interface_state_t) reminders =
    Rcfile.color_on iface.scr.untimed_win Rcfile.Untimed_reminder;
    (* make sure the cursor doesn't unexpectedly disappear *)
    let iface =
-      if iface.selected_side = Right && 
+      if iface.selected_side = Right &&
       iface.right_selection > List.length today_reminders then
          if List.length today_reminders = 0 then {
             iface with right_selection = 1;
@@ -620,7 +620,7 @@ let draw_untimed (iface : interface_state_t) reminders =
                   wattron iface.scr.untimed_win A.reverse
                else
                   wattroff iface.scr.untimed_win A.reverse;
-               trunc_mvwaddstr iface.scr.untimed_win line 2 (iface.scr.uw_cols - 3) 
+               trunc_mvwaddstr iface.scr.untimed_win line 2 (iface.scr.uw_cols - 3)
                   ("* " ^ rem.ur_msg);
                let curr_lineinfo = {
                   ul_filename = rem.ur_filename;
@@ -645,9 +645,9 @@ let draw_untimed (iface : interface_state_t) reminders =
    end else
       ();
    if List.length today_reminders > pred iface.scr.uw_lines + iface.top_untimed then begin
-      assert (mvwaddch iface.scr.untimed_win (pred iface.scr.uw_lines) 
+      assert (mvwaddch iface.scr.untimed_win (pred iface.scr.uw_lines)
              (pred iface.scr.uw_cols) (int_of_char 'v'));
-      assert (mvwaddch iface.scr.untimed_win (iface.scr.uw_lines - 2) 
+      assert (mvwaddch iface.scr.untimed_win (iface.scr.uw_lines - 2)
              (pred iface.scr.uw_cols) (int_of_char 'v'))
    end else
       ();
@@ -658,17 +658,17 @@ let draw_untimed (iface : interface_state_t) reminders =
 
 (* Draw the message window *)
 let draw_msg iface =
-   let sel_tm = 
+   let sel_tm =
       Unix.localtime (timestamp_of_line iface iface.left_selection)
    in
-   let day_s = 
+   let day_s =
       Printf.sprintf "%s, %s %.2d" (full_string_of_tm_wday sel_tm.Unix.tm_wday)
          (full_string_of_tm_mon sel_tm.Unix.tm_mon) sel_tm.Unix.tm_mday
    in
    let day_time_s =
       match iface.selected_side with
       |Left ->
-         day_s ^ " at " ^ 
+         day_s ^ " at " ^
          if !Rcfile.selection_12_hour then
             twelve_hour_string sel_tm
          else
@@ -690,13 +690,13 @@ let draw_msg iface =
    let curr_tm = Unix.localtime (Unix.time ()) in
    Rcfile.color_on iface.scr.msg_win Rcfile.Status;
    wattron iface.scr.msg_win A.bold;
-   let curr_tm_str = 
+   let curr_tm_str =
       if !Rcfile.status_12_hour then
          twelve_hour_string curr_tm
       else
          twentyfour_hour_string curr_tm
    in
-   let s = 
+   let s =
       Printf.sprintf "Wyrd v%s          Currently: %s, %s %.2d at %s"
          Version.version (full_string_of_tm_wday curr_tm.Unix.tm_wday)
          (full_string_of_tm_mon curr_tm.Unix.tm_mon)
@@ -722,19 +722,19 @@ let draw_msg iface =
       |desc :: desc_tail ->
          let time_str = Str.string_before ((List.hd times) ^ pad) 16 in
          let first_line = time_str ^ (List.hd desc) in
-         render_desc (List.tl times) desc_tail 
+         render_desc (List.tl times) desc_tail
             ((render_line (List.tl desc) []) @ first_line :: output)
    in
    let (times, descriptions) =
       match iface.selected_side with
       |Left ->
          begin match iface.timed_lineinfo.(iface.left_selection) with
-         |[] -> 
+         |[] ->
             ([""], [["(no reminder selected)"]])
-         |rem_list -> 
+         |rem_list ->
               let sorted_rem_list = List.fast_sort sort_lineinfo rem_list in
               let get_times tline = tline.tl_timestr in
-              let get_lines tline = 
+              let get_lines tline =
                  word_wrap tline.tl_msg (iface.scr.mw_cols - 24)
               in
               (List.rev_map get_times sorted_rem_list, List.rev_map get_lines sorted_rem_list)
@@ -772,9 +772,9 @@ let draw_msg iface =
    end else
       ();
    if adjusted_top < List.length desc_lines - iface.scr.mw_lines + 2 then begin
-      assert (mvwaddch iface.scr.msg_win (iface.scr.mw_lines - 2) 
+      assert (mvwaddch iface.scr.msg_win (iface.scr.mw_lines - 2)
          (iface.scr.mw_cols - 1) (int_of_char 'v'));
-      assert (mvwaddch iface.scr.msg_win (iface.scr.mw_lines - 3) 
+      assert (mvwaddch iface.scr.msg_win (iface.scr.mw_lines - 3)
          (iface.scr.mw_cols - 1) (int_of_char 'v'))
    end else
       ();
@@ -822,9 +822,9 @@ let draw_selection_dialog (iface : interface_state_t) (title : string)
                attroff A.reverse;
             end else
                trunc_mvwaddstr iface.scr.stdscr line 2 (iface.scr.cols - 4) el;
-            draw_element tail (succ line) (succ count) 
+            draw_element tail (succ line) (succ count)
          end else
-            draw_element tail line (succ count) 
+            draw_element tail line (succ count)
    in
    draw_element elements 1 0;
    (* if there's not enough window space to display all reminder files, display

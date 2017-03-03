@@ -62,8 +62,8 @@ type untimed_rem_t = {
 (* Storage for a three-month window of reminders and
  * the calendar for the current month.
  * Makes it possible to handle edge effects of moving
- * from month to month without constantly calling 
- * rem(1) and regenerating calendar layouts. 
+ * from month to month without constantly calling
+ * rem(1) and regenerating calendar layouts.
  *
  * Timed reminders are stored in an array of lists,
  * with each element of the array representing a different
@@ -107,7 +107,7 @@ let month_start_of_tm tm =
  * (number of reminders) * (average reminder duration).  Since indentation is
  * determined a month at a time, there may be some minor discrepancies at
  * month borders. *)
-let process_timed tm duration_s month_start_ts indentations partial_trem 
+let process_timed tm duration_s month_start_ts indentations partial_trem
 timed =
    let (f_rem_ts, _) = Unix.mktime tm in
    let duration =
@@ -117,14 +117,14 @@ timed =
    (* compute the indentation level *)
    (* top_index and bottom_index provide the range of row indices into
     * array indentations that are covered by this reminder *)
-   let top_index = 
+   let top_index =
       try int_of_float ((f_rem_ts -. month_start_ts) /. 3600.0)
       with _ -> 0
    in
-   let bottom_index = 
+   let bottom_index =
       try
          let real_bottom_index =
-            let shift = 
+            let shift =
                if duration > 0.0 then
                   (f_rem_ts +. (duration *. 60.0) -. month_start_ts) /. 3600.0
                else
@@ -166,7 +166,7 @@ timed =
          (* give up and default to maximum indentation *)
          pred (Array.length indentations.(0))
    in
-   let indent = find_indent 0 in 
+   let indent = find_indent 0 in
    let trem = {partial_trem with
       tr_start      = f_rem_ts;
       tr_end        = f_rem_ts +. (duration *. 60.);
@@ -176,9 +176,9 @@ timed =
 
 
 (* Obtain two lists of reminders for the month of the timestamp argument.
- * The first list is for timed reminders, the second is for untimed. 
+ * The first list is for timed reminders, the second is for untimed.
  * The timed reminders list also provides the indentation levels that
- * draw_timed should use to render each reminder. 
+ * draw_timed should use to render each reminder.
  *
  * The indentation levels are determined by maintaining an array that indicates
  * which levels have been used for each hourly timeslot.  As each reminder is
@@ -196,15 +196,15 @@ let month_reminders ?(suppress_advwarn=false) timestamp =
    let nodisplay_regex = Str.regexp_case_fold ".*nodisplay" in
    let noweight_regex = Str.regexp_case_fold ".*noweight" in
    let tm = Unix.localtime timestamp in
-   let rem_date_str = (string_of_tm_mon tm.Unix.tm_mon) ^ " " ^ 
+   let rem_date_str = (string_of_tm_mon tm.Unix.tm_mon) ^ " " ^
                       (string_of_int tm.Unix.tm_mday) ^ " " ^
                       (string_of_int (tm.Unix.tm_year + 1900)) in
-   let remind_s_flag = 
+   let remind_s_flag =
       if suppress_advwarn then " -s"
       else if !Rcfile.advance_warning then " -sa"
       else " -s" in
    let full_remind_command =
-      !Rcfile.remind_command ^ remind_s_flag ^ " -l -g -b2 " ^ 
+      !Rcfile.remind_command ^ remind_s_flag ^ " -l -g -b2 " ^
       !Rcfile.reminders_file ^ " " ^ rem_date_str
    in
    let (out_lines, err_lines) = Utility.read_all_shell_command_output full_remind_command in
@@ -323,7 +323,7 @@ let count_reminders month_start_tm timed untimed =
  * occur during DST, but this is too small to worry about. *)
 let count_busy_hours month_start_tm timed untimed =
    let hour_counts = Array.make 31 0.0 in
-   let last_day = 
+   let last_day =
       let temp = {month_start_tm with Unix.tm_mday = 32} in
       let (_, nextmonth) = Unix.mktime temp in
       32 - nextmonth.Unix.tm_mday
@@ -421,12 +421,12 @@ let create_three_month ?(suppress_advwarn=false) timestamp =
    and (next_ts, _) = Unix.mktime temp_next in
    let (pre, pt, pu) = month_reminders ~suppress_advwarn:suppress_advwarn prev_ts in
    let (cre, ct, cu) = month_reminders ~suppress_advwarn:suppress_advwarn curr_ts in
-   let (nre, nt, nu) = month_reminders ~suppress_advwarn:suppress_advwarn next_ts in 
+   let (nre, nt, nu) = month_reminders ~suppress_advwarn:suppress_advwarn next_ts in
    let at = Array.make (Array.length pt) [] in
    for i = 0 to pred (Array.length at) do
       at.(i) <- safe_append pt.(i) (safe_append ct.(i) nt.(i))
    done;
-   let err_str = 
+   let err_str =
       if String.length pre > 0 then
          pre
       else if String.length cre > 0 then
@@ -446,7 +446,7 @@ let create_three_month ?(suppress_advwarn=false) timestamp =
       all_untimed    = au;
       curr_counts    = count_busy month_start_tm at au;
       curr_cal       = Cal.make curr_ts !Rcfile.week_starts_monday;
-      remind_error   = err_str   
+      remind_error   = err_str
    }
 
 
@@ -462,10 +462,10 @@ let next_month reminders =
    } in
    let (new_curr_timestamp, temp1) = Unix.mktime temp1 in
    let (next_timestamp, temp2)     = Unix.mktime temp2 in
-   let (re, t, u) = month_reminders next_timestamp in 
+   let (re, t, u) = month_reminders next_timestamp in
    let at = Array.make (Array.length t) [] in
    for i = 0 to pred (Array.length t) do
-      at.(i) <- safe_append reminders.curr_timed.(i) 
+      at.(i) <- safe_append reminders.curr_timed.(i)
                 (safe_append reminders.next_timed.(i) t.(i))
    done;
    let au = safe_append reminders.curr_untimed (safe_append reminders.next_untimed u) in {
@@ -498,7 +498,7 @@ let prev_month reminders =
    let (re, t, u) = month_reminders prev_timestamp in
    let at = Array.make (Array.length t) [] in
    for i = 0 to pred (Array.length t) do
-      at.(i) <- safe_append t.(i) 
+      at.(i) <- safe_append t.(i)
                 (safe_append reminders.prev_timed.(i) reminders.curr_timed.(i))
    done;
    let au = safe_append u (safe_append reminders.prev_untimed reminders.curr_untimed) in {
@@ -551,27 +551,27 @@ let update_reminders rem timestamp =
  * This calls 'remind -n' twice--once for the current day, once for the next day.
  * The second call is necessary because reminders falling on the current day
  * but before the current timestamp will effectively suppress later recurrences
- * of that reminder. 
+ * of that reminder.
  *
  * We also have to make a separate check that the matched reminder is not tagged
  * with 'nodisplay'; since these reminders don't show up on the display, Wyrd
  * should not be able to match them. *)
 let find_next msg_regex timestamp =
-   let rem_regex = 
+   let rem_regex =
       Str.regexp "^\\([^ ]+\\)[/-]\\([^ ]+\\)[/-]\\([^ ]+\\) [^ ]+ \\([^ ]+\\) [^ ]+ \\([^ ]+\\) \\([^ ]+.*\\)$"
    in
    let nodisplay_regex = Str.regexp_case_fold ".*nodisplay" in
    let tm1 = Unix.localtime timestamp in
    let temp = {tm1 with Unix.tm_mday = succ tm1.Unix.tm_mday} in     (* add 24 hours *)
    let (_, tm2) = Unix.mktime temp in
-   let rem_date_str1 = (string_of_tm_mon tm1.Unix.tm_mon) ^ " " ^ 
+   let rem_date_str1 = (string_of_tm_mon tm1.Unix.tm_mon) ^ " " ^
                        (string_of_int tm1.Unix.tm_mday) ^ " " ^
                        (string_of_int (tm1.Unix.tm_year + 1900)) in
-   let rem_date_str2 = (string_of_tm_mon tm2.Unix.tm_mon) ^ " " ^ 
+   let rem_date_str2 = (string_of_tm_mon tm2.Unix.tm_mon) ^ " " ^
                        (string_of_int tm2.Unix.tm_mday) ^ " " ^
                        (string_of_int (tm2.Unix.tm_year + 1900)) in
    let remind_output_for_month date_str =
-      let remind_month_command = 
+      let remind_month_command =
          !Rcfile.remind_command ^ " -n -s -b1 " ^ !Rcfile.reminders_file ^ " " ^ date_str
       in
       let (out_lines, _) = Utility.read_all_shell_command_output remind_month_command in
@@ -579,7 +579,7 @@ let find_next msg_regex timestamp =
    in
    (* concatenate the outputs from two consecutive months of Remind data, then sort
     * the lines by leading datestamp *)
-   let two_month_output = List.rev_append 
+   let two_month_output = List.rev_append
       (remind_output_for_month rem_date_str1) (remind_output_for_month rem_date_str2)
    in
    let out_lines = List.fast_sort compare two_month_output in
@@ -682,7 +682,7 @@ let find_remdir_scripts dirname remdir_handle =
 
 
 (* Recursively compute a subtree of reminder files that Remind would execute
- * as a result of a single INCLUDE directive.  <pending_include_directives> is a list of 
+ * as a result of a single INCLUDE directive.  <pending_include_directives> is a list of
  * files and directories specified via a number of Remind INCLUDE statements.
  * <known_include_directives> is a Set of include directives which have already been
  * processed.  <known_included_filenames> is a list of filenames which are already
@@ -704,7 +704,7 @@ let rec get_included_filenames known_included_filenames known_include_directives
          in
          if IPSet.mem directive_id known_include_directives then
             (* This include directive has already been processed... skip it *)
-            get_included_filenames known_included_filenames known_include_directives 
+            get_included_filenames known_included_filenames known_include_directives
                remaining_include_directives
          else
             begin try
@@ -720,16 +720,16 @@ let rec get_included_filenames known_included_filenames known_include_directives
                 * Treat it as a regular file: parse it to locate additional
                 * INCLUDE lines, and add the additional includes to the pending list. *)
                let new_include_directives = parse_include_directives include_directive in
-               get_included_filenames (include_directive :: known_included_filenames) 
-                  (IPSet.add directive_id known_include_directives) 
+               get_included_filenames (include_directive :: known_included_filenames)
+                  (IPSet.add directive_id known_include_directives)
                   (List.rev_append new_include_directives remaining_include_directives)
             end
       with Unix.Unix_error (Unix.ENOENT, _, _) ->
          (* include_directive cannot be found on disk... skip it *)
-         get_included_filenames known_included_filenames known_include_directives 
+         get_included_filenames known_included_filenames known_include_directives
             remaining_include_directives
       end
-   
+
 
 (* Get a tuple of the form (primary remfile, all remfiles).  If !Rcfile.reminders_file
  * is a single file, then "primary_remfile" is that file, and "all_remfiles" is
@@ -737,10 +737,10 @@ let rec get_included_filenames known_included_filenames known_include_directives
  * a directory, then "primary remfile" is the first file in the directory with
  * extension ".rem", and "all remfiles" is all files with extension ".rem"
  * combined with all INCLUDEd files. *)
-let get_all_remfiles () =   
+let get_all_remfiles () =
    (* Test whether a filename represents an existing directory. *)
    let is_existing_dir fn =
-      try 
+      try
          let status = Unix.stat fn in
          status.Unix.st_kind = Unix.S_DIR
       with Unix.Unix_error _ ->
@@ -764,7 +764,7 @@ let get_all_remfiles () =
                get_included_filenames [] IPSet.empty sorted_scripts)
       with Unix.Unix_error _ ->
          (* Can't open the directory... *)
-         failwith (Printf.sprintf "Can't open reminders directory \"%s\"" 
+         failwith (Printf.sprintf "Can't open reminders directory \"%s\""
             toplevel_include_directive)
    else
       (* toplevel include directive is not a directory.  Treat it as a regular file,
@@ -791,7 +791,7 @@ let get_untimed_reminders_for_day untimed_reminders timestamp =
       curr_tm with Unix.tm_sec  = 0;
                    Unix.tm_min  = 0;
                    Unix.tm_hour = 0;
-                   Unix.tm_mday = succ curr_tm.Unix.tm_mday 
+                   Unix.tm_mday = succ curr_tm.Unix.tm_mday
    } in
    let (day_start_ts, _) = Unix.mktime temp1 in
    let (day_end_ts, _)   = Unix.mktime temp2 in

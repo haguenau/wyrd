@@ -38,15 +38,15 @@ module PairSet = Set.Make (
 exception Config_failure of string
 let config_failwith s = raise (Config_failure s)
 
-type command_t = | ScrollUp | ScrollDown | NextDay | PrevDay 
+type command_t = | ScrollUp | ScrollDown | NextDay | PrevDay
                  | NextWeek | PrevWeek | NextMonth | PrevMonth
-                 | Home | Zoom | Edit | EditAny | NewTimed | NewUntimed 
-                 | NewTimedDialog | NewUntimedDialog | SwitchWindow 
+                 | Home | Zoom | Edit | EditAny | NewTimed | NewUntimed
+                 | NewTimedDialog | NewUntimedDialog | SwitchWindow
                  | SearchNext | BeginSearch | Quit | ViewReminders
                  | ScrollDescUp | ScrollDescDown | Refresh
                  | ViewAllReminders | ViewWeek | ViewMonth
                  | NextReminder | ViewKeybindings | CopyReminder
-                 | PasteReminder | PasteReminderDialog 
+                 | PasteReminder | PasteReminderDialog
                  | CutReminder | Goto | QuickEvent
                  | NewGenReminder of int | NewGenReminderDialog of int
 
@@ -55,9 +55,9 @@ type entry_operation_t = | EntryComplete | EntryBackspace | EntryExit
 type operation_t = CommandOp of command_t | EntryOp of entry_operation_t
 
 type colorable_object_t = | Help | Timed_default | Timed_current | Untimed_reminder
-                          | Timed_date | Selection_info | Description | Status 
+                          | Timed_date | Selection_info | Description | Status
                           | Calendar_labels | Calendar_level1 | Calendar_level2
-                          | Calendar_level3 | Calendar_today | Left_divider | Right_divider 
+                          | Calendar_level3 | Calendar_today | Left_divider | Right_divider
                           | Timed_reminder1 | Timed_reminder2 | Timed_reminder3
                           | Timed_reminder4
 
@@ -195,7 +195,7 @@ let decode_single_key_string key_string =
       |"<f10>"       -> (Key.f 10)
       |"<f11>"       -> (Key.f 11)
       |"<f12>"       -> (Key.f 12)
-      |_             -> 
+      |_             ->
          if String.length key_string = 1 then
             int_of_char str.[0]
          else
@@ -247,7 +247,7 @@ let decode_single_key_string key_string =
          else
             config_failwith ("Cannot apply \\\\C to key \"" ^ main_key ^ "\";\n" ^
                        "octal notation might let you accomplish this.")
-      else 
+      else
          let octal_regex = Str.regexp "^0o" in
          try
             let _ = Str.search_forward octal_regex key_string 0 in
@@ -287,14 +287,14 @@ let unregister_binding key_string =
       let op = Hashtbl.find table_key_command k in
       Hashtbl.remove table_key_command k;
       Hashtbl.remove table_command_key op
-   with Not_found -> 
+   with Not_found ->
       ()
    end;
    begin try
       let op = Hashtbl.find table_key_entry k in
       Hashtbl.remove table_key_entry k;
       Hashtbl.remove table_entry_key op
-   with Not_found -> 
+   with Not_found ->
       ()
    end
 
@@ -383,7 +383,7 @@ let string_of_operation op =
  * key representation of the form \xxx (unquoted), and multiple_keys is a quoted
  * string containing a number of keypresses to simulate.
  *)
-let parse_line line_stream = 
+let parse_line line_stream =
    (* Convenience function for 'set' keyword *)
    let parse_set variable_str variable coersion error =
       begin match line_stream with parser
@@ -404,7 +404,7 @@ let parse_line line_stream =
    in
    (* Convenience function for 'color' keyword *)
    let parse_color obj_str obj =
-      let foreground = 
+      let foreground =
          begin match line_stream with parser
          | [< 'Ident "black" >]   -> Color.black
          | [< 'Ident "red" >]     -> Color.red
@@ -419,7 +419,7 @@ let parse_line line_stream =
             config_failwith ("Expected a foreground color after \"set " ^ obj_str)
          end
       in
-      let background = 
+      let background =
          begin match line_stream with parser
          | [< 'Ident "black" >]   -> Color.black
          | [< 'Ident "red" >]     -> Color.red
@@ -445,8 +445,8 @@ let parse_line line_stream =
       | [< >] ->
          config_failwith ("Expected a filename string after \"include\"")
       end
-   | [< 'Kwd "bind" >] -> 
-      let bind_key key = 
+   | [< 'Kwd "bind" >] ->
+      let bind_key key =
          begin match line_stream with parser
          | [< 'Ident command_str >] ->
             begin try
@@ -460,7 +460,7 @@ let parse_line line_stream =
          end
       in
       begin match line_stream with parser
-      | [< 'String k >] -> 
+      | [< 'String k >] ->
          bind_key k
       | [< 'Ident "\\" >] ->
          begin match line_stream with parser
@@ -468,8 +468,8 @@ let parse_line line_stream =
             begin
                try
                   let octal_digits = "0o" ^ (string_of_int octal_int) in
-                  bind_key octal_digits 
-               with 
+                  bind_key octal_digits
+               with
                   (Failure "int_of_string") -> config_failwith "Expected octal digits after \"\\\""
             end
          | [< >]  ->
@@ -567,7 +567,7 @@ let parse_line line_stream =
       | [< 'Ident "help" >]             -> parse_color "help" Help
       | [< 'Ident "timed_default" >]    -> parse_color "timed_default" Timed_default
       | [< 'Ident "timed_current" >]    -> parse_color "timed_current" Timed_current
-      | [< 'Ident "timed_reminder" >]   -> config_failwith 
+      | [< 'Ident "timed_reminder" >]   -> config_failwith
              ("\"timed_reminder\" has been deprecated.  Please use \"timed_reminder1\".")
       | [< 'Ident "untimed_reminder" >] -> parse_color "untimed_reminder" Untimed_reminder
       | [< 'Ident "timed_date" >]       -> parse_color "timed_date" Timed_date
@@ -578,7 +578,7 @@ let parse_line line_stream =
       | [< 'Ident "calendar_level1" >]  -> parse_color "calendar_level1" Calendar_level1
       | [< 'Ident "calendar_level2" >]  -> parse_color "calendar_level2" Calendar_level2
       | [< 'Ident "calendar_level3" >]  -> parse_color "calendar_level3" Calendar_level3
-      | [< 'Ident "calendar_selection" >] -> 
+      | [< 'Ident "calendar_selection" >] ->
          begin
          Printf.fprintf stderr "Warning: colorable object \"calendar_selection\" has been ";
          Printf.fprintf stderr "deprecated.\nPlease remove this reference from the wyrdrc file.\n"
@@ -597,7 +597,7 @@ let parse_line line_stream =
       config_failwith "Expected a keyword at start of line";;
 
 
-(* try opening the rc file, first looking at $HOME/.wyrdrc, 
+(* try opening the rc file, first looking at $HOME/.wyrdrc,
  * then looking at $PREFIX/etc/wyrdrc *)
 let open_rcfile rcfile_op =
    match rcfile_op with
@@ -606,19 +606,19 @@ let open_rcfile rcfile_op =
          let homedir = Sys.getenv "HOME" in
          homedir ^ "/.wyrdrc"
       in
-      let rcfile_fullpath = 
+      let rcfile_fullpath =
          (* expand out any occurrences of ${prefix} that autoconf
           * decides to insert *)
          let prefix_regex = Str.regexp "\\${prefix}" in
-         let expanded_sysconfdir = Str.global_replace prefix_regex 
+         let expanded_sysconfdir = Str.global_replace prefix_regex
          Install.prefix Install.sysconfdir in
          Utility.join_path expanded_sysconfdir "wyrdrc"
       in
       begin try (open_in home_rcfile, home_rcfile)
       with Sys_error error_str ->
          begin try (open_in rcfile_fullpath, rcfile_fullpath)
-         with Sys_error error_str -> failwith 
-            ("Could not open configuration file \"" ^ home_rcfile ^ "\" or \"" ^ 
+         with Sys_error error_str -> failwith
+            ("Could not open configuration file \"" ^ home_rcfile ^ "\" or \"" ^
             rcfile_fullpath ^ "\" .")
          end
       end
@@ -632,7 +632,7 @@ let open_rcfile rcfile_op =
 let validate_colors () =
    (* form a Set of all color pairs, and an inverse mapping from color pair to objects *)
    let initial_palette =
-      let process_entry key pair colors = 
+      let process_entry key pair colors =
          Hashtbl.add inverse_color_table pair key;
          PairSet.add pair colors
       in
@@ -668,13 +668,13 @@ let validate_colors () =
       succ n
    in
    let _ = PairSet.fold register_color_pair (reduce_colors initial_palette) 1 in ()
-   
+
 
 
 let rec process_rcfile rcfile_op =
-   let line_lexer line = 
-      make_lexer 
-         ["include"; "bind"; "unbind"; "set"; "color"; "#"] 
+   let line_lexer line =
+      make_lexer
+         ["include"; "bind"; "unbind"; "set"; "color"; "#"]
       (Stream.of_string line)
    in
    let empty_regexp = Str.regexp "^[\t ]*$" in
@@ -696,7 +696,7 @@ let rec process_rcfile rcfile_op =
                (* process any included rcfiles as they are encountered *)
                begin match !included_rcfiles with
                |[] -> ()
-               |head :: tail -> 
+               |head :: tail ->
                   included_rcfiles := tail;
                   process_rcfile (Some head)
                end
@@ -706,7 +706,7 @@ let rec process_rcfile rcfile_op =
                   !line_num rcfile_filename s in
                   failwith error_str)
                |Stream.Failure ->
-                  failwith (Printf.sprintf "Syntax error on line %d of \"%s\"" 
+                  failwith (Printf.sprintf "Syntax error on line %d of \"%s\""
                   !line_num rcfile_filename)
 
       done

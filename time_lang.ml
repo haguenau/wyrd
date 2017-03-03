@@ -46,7 +46,7 @@ type event_t = Timed of (Unix.tm * Unix.tm) | Untimed of Unix.tm
  * then the fields may be misnumbered in code below. *)
 
 (* Note: ocaml _really_ needs a raw string syntax to make regexps look more sane... *)
-let weekdays = 
+let weekdays =
    "\\(\\(on[ \t]+\\)?\\(next[ \t]+\\)?" ^
    "\\(\\(sunday\\|sun\\)\\|\\(monday\\|mon\\)\\|\\(tuesday\\|tue\\|tues\\)\\|" ^
    "\\(wednesday\\|wed\\)\\|\\(thursday\\|thu\\|thur\\|thurs\\)\\|" ^
@@ -59,16 +59,16 @@ let numeric_date = "\\(\\(on[ \t]+\\)?\\(" ^ numeric_slash_date ^ "\\|" ^ iso_da
 let short_date =
    "\\(\\(today\\)\\|\\(tomorrow\\)\\|" ^
    "\\(in[ \t]+\\([0-9]+\\)[ \t]+day\\(s\\|s' time\\)?\\)\\)"
-let date_spec = 
+let date_spec =
    "\\(" ^ weekdays ^ "\\|" ^ numeric_date ^ "\\|" ^ short_date ^ "\\)"
 
 (* 5, or 5:30, or 5pm, or 5:30 pm *)
-let time_spec = 
+let time_spec =
    "\\(\\(\\([0-9][0-9]?\\)\\(:\\([0-9][0-9]\\)\\)?[ \t]*\\(am\\|pm\\)?\\)\\|" ^
    "\\(noon\\|midnight\\)\\)"
 (* either match a single time spec, or match a pair formatted as a range:
  * 5-7 or 5:30pm-7 or 5 until 7 or 5:30 to 7pm ... *)
-let time_range_spec = 
+let time_range_spec =
    "\\(\\(at[ \t]+\\)?" ^ time_spec ^ "\\([ \t]*\\(-\\|to\\|\\until\\)[ \t]*" ^
    time_spec ^ "\\)?\\)"
 
@@ -158,7 +158,7 @@ let find_next_wday curr_tm wday next_week =
       else
          curr_tm
    in
-   let diff = 
+   let diff =
       if wday > scan_from.Unix.tm_wday then
          wday - scan_from.Unix.tm_wday
       else if wday = scan_from.Unix.tm_wday && next_week then
@@ -209,8 +209,8 @@ let find_next_mon_mday curr_tm mon mday =
       } in
       let (_, norm) = Unix.mktime temp in
       norm
-      
-      
+
+
 (* Parse a natural language date string. *)
 let parse_natural_language_date date_str =
    let current = Unix.localtime (Unix.time ()) in
@@ -270,7 +270,7 @@ let parse_natural_language_date date_str =
             parse_failwith "please submit a bug report for \"unreachable case 3\"."
       in
 
-      let handle_numeric_slash () = 
+      let handle_numeric_slash () =
          try
             (* US-style numeric date specified with slashes *)
             let first  = int_of_string (get_field 17) in
@@ -314,7 +314,7 @@ let parse_natural_language_date date_str =
             let first  = int_of_string (get_field 22) in
             let second = int_of_string (get_field 23) in
             let third  = int_of_string (get_field 24) in
-            if first >= 1991 && first <= 2037 && 
+            if first >= 1991 && first <= 2037 &&
             second >= 1 && second <= 12 &&
             third >= 1 && third <= 31 then
                let temp = {
@@ -336,7 +336,7 @@ let parse_natural_language_date date_str =
       let handle_short () =
          try
             (* "today" *)
-            let _ = get_field 26 in 
+            let _ = get_field 26 in
             let temp = {
                current_tm with Unix.tm_hour = 0;
                                Unix.tm_min = 0;
@@ -347,7 +347,7 @@ let parse_natural_language_date date_str =
          with Not_found ->
          try
             (* "tomorrow" *)
-            let _ = get_field 27 in 
+            let _ = get_field 27 in
             let temp = {
                current_tm with Unix.tm_mday = succ current_tm.Unix.tm_mday;
                                Unix.tm_hour = 0;
@@ -387,7 +387,7 @@ let parse_natural_language_date date_str =
             (* a numeric date specifier with dashes *)
             let _ = get_field 21 in
             handle_iso ()
-         with Not_found -> 
+         with Not_found ->
          try
             (* a shortcut date *)
             let _ = get_field 25 in
@@ -443,11 +443,11 @@ let parse_natural_language_time future current_tm time_str =
             if temp = 0 then
                (0, "am")
             else if temp >= 13 && temp <= 23 then
-               (temp - 12, "pm") 
+               (temp - 12, "pm")
             else if temp >= 1 && temp <= 11 then
                (temp, start_meridien_s)
             else if temp = 12 then
-               (0, start_meridien_s) 
+               (0, start_meridien_s)
             else
                parse_fail_default ()
       in
@@ -462,7 +462,7 @@ let parse_natural_language_time future current_tm time_str =
                parse_fail_default ()
       in
 
-      let start_tm = 
+      let start_tm =
          next_matching_time future current_tm start_hour start_minute start_meridien
       in
       let end_tm =
@@ -479,11 +479,11 @@ let parse_natural_language_time future current_tm time_str =
                   if temp = 0 then
                      (0, "am")
                   else if temp >= 13 && temp <= 23 then
-                     (temp - 12, "pm") 
+                     (temp - 12, "pm")
                   else if temp >= 1 && temp <= 11 then
                      (temp, end_meridien_s)
                   else if temp = 12 then
-                     (0, end_meridien_s) 
+                     (0, end_meridien_s)
                   else
                      parse_fail_default ()
             in
@@ -566,7 +566,7 @@ let rec find_date_time_end date time event_remainder attempts =
 let parse_natural_language_event event_str =
    let (date, time, description) =
       (* search at the start of the string first, then at the end *)
-      let (date_begin, time_begin, remainder) = 
+      let (date_begin, time_begin, remainder) =
          find_date_time_begin None None event_str 0
       in
       find_date_time_end date_begin time_begin remainder 0

@@ -61,7 +61,7 @@ let make timestamp start_monday =
       first.Unix.tm_wday
    in
    (* compute the last day of the month *)
-   let last_day = 
+   let last_day =
       let temp = {tm with Unix.tm_mday = 32} in
       let (_, nextmonth) = Unix.mktime temp in
       32 - nextmonth.Unix.tm_mday
@@ -76,7 +76,7 @@ let make timestamp start_monday =
       if count > 7 then
          wkd_str
       else
-         build_weekdays (wkd_str ^ " " ^ (short_string_of_tm_wday wd_num)) 
+         build_weekdays (wkd_str ^ " " ^ (short_string_of_tm_wday wd_num))
             ((succ wd_num) mod 7) (succ count)
    in
    let week_start_day = if start_monday then 1 else 0 in
@@ -86,7 +86,7 @@ let make timestamp start_monday =
    (* generate the days of the month *)
    let rec build_monthdays weeks_list week_str weeknum_list mday wday =
       if mday > last_day then
-         let weeknum_str = 
+         let weeknum_str =
             let last_weekday = {tm with Unix.tm_mday = pred mday} in
             let weeknum = weeknum_of_tm last_weekday in
             Printf.sprintf "%2d" weeknum
@@ -94,7 +94,7 @@ let make timestamp start_monday =
          (List.rev (week_str :: weeks_list), List.rev (weeknum_str :: weeknum_list))
       else
          if wday = week_start_day then
-            let weeknum_str = 
+            let weeknum_str =
                let last_weekday = {tm with Unix.tm_mday = pred mday} in
                let weeknum = weeknum_of_tm last_weekday in
                Printf.sprintf "%2d" weeknum
@@ -112,7 +112,7 @@ let make timestamp start_monday =
       else
          String.make ((first_weekday + 7 - week_start_day) * 3) ' '
    in
-   let (cal_monthdays, cal_weeknums) = 
+   let (cal_monthdays, cal_weeknums) =
       build_monthdays [] (padding ^ " 1") [] 2 ((succ first_weekday) mod 7)
    in {
       title    = cal_title;
@@ -123,5 +123,5 @@ let make timestamp start_monday =
 
 
 
-      
+
 (* arch-tag: DO_NOT_CHANGE_4909df7f-9801-448d-9030-fb4b0232408d *)

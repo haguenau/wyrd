@@ -106,7 +106,7 @@ type interface_state_t = {
    track_home        : bool;                (* true if cursor position should "stick" to current time *)
    resize_failed_win : window option        (* if a resize fails, this holds a window pointer for an error msg. *)
 }
-   
+
 
 (* round to the nearest displayed time value *)
 let round_time zoom t =
@@ -136,7 +136,7 @@ let make (std : screen_t) =
       version            = Version.version;
       scr                = std;
       run_wyrd           = true;
-      top_timestamp      = if !Rcfile.center_cursor then 
+      top_timestamp      = if !Rcfile.center_cursor then
                               rounded_time -. 60.0 *. 60.0 *. (float_of_int ((std.tw_lines / 2) - 2))
                            else
                               rounded_time -. 60.0 *. 60.0;
@@ -158,7 +158,7 @@ let make (std : screen_t) =
       track_home         = !Rcfile.home_sticky;
       resize_failed_win  = None
    }
-                                               
+
 
 (* time increment in float seconds *)
 let time_inc (iface : interface_state_t) =

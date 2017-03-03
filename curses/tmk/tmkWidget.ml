@@ -150,7 +150,7 @@ class virtual widget = object (self)
     new TmkSignal.signal "add_descendant" TmkSignal.Marshall.all_unit
   val signal_remove_descendant =
     new TmkSignal.signal "remove_descendant" TmkSignal.Marshall.all_unit
-  val signal_toplevel_event = 
+  val signal_toplevel_event =
     new TmkSignal.signal "toplevel_event" TmkSignal.Marshall.all_unit
 
   method signal_map = signal_map

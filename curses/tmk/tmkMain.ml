@@ -1,7 +1,7 @@
 open TmkStruct
 
 exception Exit_run
-  
+
 let all_terms = ref []
 
 let try_parse_config_file f () =
@@ -54,11 +54,11 @@ let iterate_term (term : TmkWidget.terminal) =
     ignore (Curses.move y x);
     (*ignore (Curses.refresh ())*)
   )
- 
-  
+
+
 let iterate () =
   List.iter iterate_term !all_terms
-  
+
 let run () =
   try
     while true do
