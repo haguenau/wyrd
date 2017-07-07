@@ -748,6 +748,32 @@ CONFIGURATION VARIABLES section.
    \item \texttt{untimed\_bold} \\
       A boolean value that determines whether or not Wyrd should render
       untimed reminders using a bold font.
+
+   \item \texttt{monname\_fmt} \\
+      A printf-like format string used to expand \texttt{\%monname\%}.
+      This must accept a string.
+   \item \texttt{mon\_fmt} \\
+      A printf-like format string used to expand \texttt{\%mon\%}.
+      This must accept an integer.
+   \item \texttt{mday\_fmt} \\
+      A printf-like format string used to expand \texttt{\%mday\%}.
+      This must accept an integer.
+   \item \texttt{year\_fmt} \\
+      A printf-like format string used to expand \texttt{\%year\%}.
+      This must accept an integer.
+   \item \texttt{hour\_fmt} \\
+      A printf-like format string used to expand \texttt{\%hour\%}.
+      This must accept an integer.
+   \item \texttt{min\_fmt} \\
+      A printf-like format string used to expand \texttt{\%min\%}.
+      This must accept an integer.
+   \item \texttt{wdayname\_fmt} \\
+      A printf-like format string used to expand \texttt{\%wdayname\%}.
+      This must accept a string.
+   \item \texttt{wday\_fmt} \\
+      A printf-like format string used to expand \texttt{\%wday\%}.
+      This must accept an integer.
+
 \end{itemize}
 For maximum usefulness, \texttt{busy\_level1} $<$ \texttt{busy\_level2} $<$
 \texttt{busy\_level3} $<$ \texttt{busy\_level4}.
