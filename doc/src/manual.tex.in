@@ -5,7 +5,7 @@
 % script.  This script has a preprocessor, which is the source of the
 % IF LATEX ... ELSE ... END IF comments.
 % "latex2man -CLATEX -L" will output pure tex source, which can be
-% handled either via latex or hevea. (Also, latex2man sucks.  If you know 
+% handled either via latex or hevea. (Also, latex2man sucks.  If you know
 % of a better tool that does the same job, I'd love to hear about it.)
 % Hevea has its own preprocessor, which is the source of the BEGIN LATEX
 % and HEVEA comments. (Hevea doesn't suck.)
@@ -70,24 +70,24 @@ following software installed:
 %BEGIN LATEX
       OCaml\footnote{http://caml.inria.fr} $\ge$ 3.08
 %END LATEX
-%HEVEA \begin{rawhtml} <a href="http://caml.inria.fr/">OCaml</a> >= 3.08 \end{rawhtml} 
-   \item 
+%HEVEA \begin{rawhtml} <a href="http://caml.inria.fr/">OCaml</a> >= 3.08 \end{rawhtml}
+   \item
 %BEGIN LATEX
       the ncurses library\footnote{http://www.gnu.org/software/ncurses/ncurses.html}
 %END LATEX
-%HEVEA \begin{rawhtml} <a href="http://www.gnu.org/software/ncurses/ncurses.html">ncurses library</a> \end{rawhtml} 
+%HEVEA \begin{rawhtml} <a href="http://www.gnu.org/software/ncurses/ncurses.html">ncurses library</a> \end{rawhtml}
       (and development headers)
-   \item 
+   \item
 %BEGIN LATEX
       Remind \footnote{http://www.roaringpenguin.com/penguin/open\_source\_remind.php} $\ge$ 3.1.0
 %END LATEX
 %HEVEA \begin{rawhtml} <a href="http://www.roaringpenguin.com/penguin/open_source_remind.php">Remind</a> >= 3.1.0 \end{rawhtml}
-   \item 
+   \item
 %BEGIN LATEX
       GNU make\footnote{http://www.gnu.org/software/make/}
 %END LATEX
 %HEVEA \begin{rawhtml} <a href="http://www.gnu.org/software/make/">GNU make</a> \end{rawhtml}
-   \item the Unix pager application, \texttt{less} 
+   \item the Unix pager application, \texttt{less}
 \end{itemize}
 Wyrd may be compiled by executing the following at the root of the source tree:
 \begin{verbatim}
@@ -139,16 +139,16 @@ may also be a directory containing files with a .rem extension.)
 \section{Quick Start}
 %@% IF !LATEX %@%
 CAUTION: while this manpage should be suitable as a quick reference, it may
-be subject to miscellaneous shortcomings in typesetting.  The definitive 
+be subject to miscellaneous shortcomings in typesetting.  The definitive
 documentation is the user manual provided with Wyrd in PDF or HTML format.
 %@% ELSE %@%
 %@% END-IF %@%
 
 This section describes how to use Wyrd in its default configuration.  After
 familiarizing yourself with the basic operations as outlined in this section,
-you may wish to consult 
+you may wish to consult
 %@% IF LATEX %@%
-Section \ref{advanced} 
+Section \ref{advanced}
 %@% ELSE %@%
 the \Cmd{wyrdrc}{5} manpage
 %@% END-IF %@%
@@ -156,9 +156,9 @@ to see how Wyrd can be configured to better fit your needs.
 
 \subsection{Overview}
 Before attempting to use Wyrd, learn how to use Remind.  Wyrd makes no attempt
-to hide the details of Remind programming from the user.  
+to hide the details of Remind programming from the user.
 %@% IF LATEX %@%
-Aside from reading the Remind manpage, you may get some useful pointers by reading 
+Aside from reading the Remind manpage, you may get some useful pointers by reading
 %BEGIN LATEX
 Mike Harris's article on 43 Folders\footnote{http://www.43folders.com/2005/02/guest\_mike\_harr.html}
 or David Skoll's writeup on Linux Journal\footnote{http://www.linuxjournal.com/article/3529}.
@@ -204,7 +204,7 @@ or reminders that are currently selected.
 %@% END-IF %@%
       \hline
       Action & Keypress \\
-      \hline 
+      \hline
       scroll up and down the schedule & \texttt{<up>}, \texttt{<down>} or \texttt{k}, \texttt{j} \\
       jump back or forward by a day & \texttt{<pageup>}, \texttt{<pagedown>} or \texttt{4}, \texttt{6} or \texttt{<}, \texttt{>} or \texttt{H}, \texttt{L} \\
       jump back or forward by a week & \texttt{8}, \texttt{2} or \texttt{[}, \texttt{]} or \texttt{K}, \texttt{J} \\
@@ -225,7 +225,7 @@ or reminders that are currently selected.
 Notice that if you have a numeric keypad, the \{\texttt{4, 6, 8, 2}\} keys will
 let you move directionally in the month calendar view at the upper-right of the
 screen.  Similarly, \{\texttt{H, J, K, L}\} will cause directional calendar
-movement using the standard mapping from 
+movement using the standard mapping from
 %@% IF LATEX %@%
 \texttt{vi(1)}.
 %@% ELSE %@%
@@ -363,7 +363,7 @@ window.  Similarly, \texttt{'R'} will view all reminders triggered
 on or after the selected date (all non-expired reminders are triggered).
 
 If you want to get a more global view of your schedule, Wyrd will also
-let you view Remind's formatted calendar output in a 
+let you view Remind's formatted calendar output in a
 %@% IF LATEX %@%
 \texttt{less(1)}
 %@% ELSE %@%
@@ -448,7 +448,7 @@ Remind front-ends such as tkremind.
 %@% ELSE %@%
 \section{Introduction}
 CAUTION: while this manpage should be suitable as a quick reference, it may
-be subject to miscellaneous shortcomings in typesetting.  The definitive 
+be subject to miscellaneous shortcomings in typesetting.  The definitive
 documentation is the user manual provided with Wyrd in PDF format.
 
 %@% END-IF %@%
@@ -459,7 +459,7 @@ create a personalized configuration file in \texttt{\$HOME/.wyrdrc}, and select
 settings that match your usage patterns.  The recommended procedure is to ``include''
 the \texttt{wyrdrc} file provided with Wyrd
 %@% IF LATEX %@%
-(see Section \ref{include}), 
+(see Section \ref{include}),
 %@% ELSE %@%
 (see INCLUDING OTHER RCFILES),
 %@% END-IF %@%
@@ -474,13 +474,13 @@ You may notice that the \texttt{wyrdrc} syntax is similar to the syntax used in
 the configuration file for the Mutt email client (muttrc).
 
 Within the \texttt{wyrdrc} file, strings should be enclosed in double quotes (\texttt{"}).
-A double quote character inside a string may be represented by 
+A double quote character inside a string may be represented by
 %@% IF LATEX %@%
 \texttt{$\backslash$"} .
 %@% ELSE %@%
 \Bs " .
 %@% END-IF %@%
-The backslash character must be represented by doubling it 
+The backslash character must be represented by doubling it
 %@% IF LATEX %@%
 (\texttt{$\backslash\backslash$}).
 %@% ELSE %@%
@@ -498,7 +498,7 @@ Syntax: include \emph{filename\_string} \\ \\
 This syntax can be used to include one run-configuration file within another.
 This command could be used to load the default \texttt{wyrdrc} file (probably
 found in \texttt{/etc/wyrdrc} or \texttt{/usr/local/etc/wyrdrc}) within your
-personalized rcfile, 
+personalized rcfile,
 %@% IF LATEX %@%
 \texttt{\~{}/.wyrdrc}.
 %@% ELSE %@%
@@ -530,18 +530,18 @@ Syntax: \texttt{bind \emph{key\_identifier operation}} \\ \\
 \subsection{Creating Key Bindings}
 Syntax: bind \emph{key\_identifier operation} \\ \\
 %@% END-IF %@%
-This command will bind a keypress to execute a calendar operation.  
+This command will bind a keypress to execute a calendar operation.
 The various operations, which should not be enclosed in quotes,
-may be found in 
+may be found in
 %@% IF LATEX %@%
-Section \ref{operationslist}. 
+Section \ref{operationslist}.
 %@% ELSE %@%
 the section on CALENDAR OPERATIONS.
 %@% END-IF %@%
 Key identifiers may be specified by strings that represent a single keypress,
-for example \texttt{"m"} (quotes included).  The key may be prefixed with 
+for example \texttt{"m"} (quotes included).  The key may be prefixed with
 %@% IF LATEX %@%
-\texttt{"$\backslash\backslash$C"} or \texttt{"$\backslash\backslash$M"} 
+\texttt{"$\backslash\backslash$C"} or \texttt{"$\backslash\backslash$M"}
 %@% ELSE %@%
 "\Bs\Bs C" or "\Bs\Bs M"
 %@% END-IF %@%
@@ -567,9 +567,9 @@ representations, so the following strings may be used to represent them:
 \end{itemize}
 Due to differences between various terminal emulators, this key identifier syntax may
 not be adequate to describe every keypress.  As a workaround, Wyrd will also accept key
-identifiers in octal notation.  As an example, you could use 
+identifiers in octal notation.  As an example, you could use
 %@% IF LATEX %@%
-\texttt{$\backslash$024} 
+\texttt{$\backslash$024}
 %@% ELSE %@%
 \Bs 024
 %@% END-IF %@%
@@ -619,7 +619,7 @@ background on terminal emulators which support it.
 The following configuration variables may be set as described in Section \ref{setvar}:
 %@% ELSE %@%
 \section{Configuration Variables}
-The following configuration variables may be set as described in the SETTING 
+The following configuration variables may be set as described in the SETTING
 CONFIGURATION VARIABLES section.
 %@% END-IF %@%
 \begin{itemize}
@@ -649,7 +649,7 @@ CONFIGURATION VARIABLES section.
       Controls the format of the \texttt{REM} line created when editing a new
       timed reminder.  The following string substitutions will be made:
       \texttt{'\%monname\%'} - month name, \texttt{'\%mon\%'} - month number,
-      \texttt{'\%mday\%'} - day of the month, \texttt{'\%year\%'} - year, 
+      \texttt{'\%mday\%'} - day of the month, \texttt{'\%year\%'} - year,
       \texttt{'\%hour\%'} - hour, \texttt{'\%min\%'} - minute,
       \texttt{'\%wdayname\%'} - weekday name, \texttt{'\%wday\%'} - weekday number.
    \item \texttt{untimed\_template} \\
@@ -707,8 +707,8 @@ CONFIGURATION VARIABLES section.
       also controls the format of timestamps in the formatted calendars
       produced by \texttt{view\_week} and \texttt{view\_month}.
    \item \texttt{center\_cursor} \\
-      A boolean value that determines how the screen and cursor move during 
-      scrolling operations.  When set to \texttt{"true"}, the cursor is fixed 
+      A boolean value that determines how the screen and cursor move during
+      scrolling operations.  When set to \texttt{"true"}, the cursor is fixed
       in the center of the timed reminders window, and the schedule scrolls around
       it.  When set to \texttt{"false"} (the default), the cursor will move up
       and down the schedule during scrolling operations.
@@ -727,11 +727,11 @@ CONFIGURATION VARIABLES section.
       A boolean value that determines whether or not weeks should be numbered
       within the month calendar window.  Weeks are numbered according to the ISO
       8601 standard.  The ISO standard week begins on Monday, so to avoid
-      confusion it is recommended that \texttt{week\_starts\_monday} be set to 
+      confusion it is recommended that \texttt{week\_starts\_monday} be set to
       \texttt{"true"} when week numbering is enabled.
    \item \texttt{home\_sticky} \\
       A boolean value that determines whether or not the cursor should
-      "stick" to the "home" position.  When this option is set to 
+      "stick" to the "home" position.  When this option is set to
       \texttt{"true"}, then after pressing the \texttt{<home>} key the
       cursor will automatically follow the current date and time.  The
       effect is cancelled by pressing any of the navigation keys.
@@ -748,8 +748,34 @@ CONFIGURATION VARIABLES section.
    \item \texttt{untimed\_bold} \\
       A boolean value that determines whether or not Wyrd should render
       untimed reminders using a bold font.
+
+   \item \texttt{monname\_fmt} \\
+      A printf-like format string used to expand \texttt{\%monname\%}.
+      This must accept a string.
+   \item \texttt{mon\_fmt} \\
+      A printf-like format string used to expand \texttt{\%mon\%}.
+      This must accept an integer.
+   \item \texttt{mday\_fmt} \\
+      A printf-like format string used to expand \texttt{\%mday\%}.
+      This must accept an integer.
+   \item \texttt{year\_fmt} \\
+      A printf-like format string used to expand \texttt{\%year\%}.
+      This must accept an integer.
+   \item \texttt{hour\_fmt} \\
+      A printf-like format string used to expand \texttt{\%hour\%}.
+      This must accept an integer.
+   \item \texttt{min\_fmt} \\
+      A printf-like format string used to expand \texttt{\%min\%}.
+      This must accept an integer.
+   \item \texttt{wdayname\_fmt} \\
+      A printf-like format string used to expand \texttt{\%wdayname\%}.
+      This must accept a string.
+   \item \texttt{wday\_fmt} \\
+      A printf-like format string used to expand \texttt{\%wday\%}.
+      This must accept an integer.
+
 \end{itemize}
-For maximum usefulness, \texttt{busy\_level1} $<$ \texttt{busy\_level2} $<$ 
+For maximum usefulness, \texttt{busy\_level1} $<$ \texttt{busy\_level2} $<$
 \texttt{busy\_level3} $<$ \texttt{busy\_level4}.
 
 
@@ -760,7 +786,7 @@ For maximum usefulness, \texttt{busy\_level1} $<$ \texttt{busy\_level2} $<$
 \section{Calendar Operations}
 %@% END-IF %@%
 Every Wyrd operation can be made available to the interface using the syntax
-described in 
+described in
 %@% IF LATEX %@%
 Section \ref{bindings}.
 %@% ELSE %@%
@@ -936,7 +962,7 @@ The following is a list of all colorable objects.
    \item Wyrd fills in sensible defaults for the fields of a \texttt{REM} statement, but
       you will inevitably need to make some small edits to achieve the behavior
       you want. If you use Vim, you can make your life easier by installing the
-      Vim-Latex Suite and then modifying your 
+      Vim-Latex Suite and then modifying your
 %@% IF LATEX %@%
       \texttt{\~{}/.wyrdrc}
 %@% ELSE %@%

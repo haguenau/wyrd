@@ -1,9 +1,0 @@
-Wyrd README file
-------------------------------------------------------------------------
-
-Please see the 'doc' subdirectory for installation and usage
-instructions.
-
-DEVELOPERS: Invoke "prep-devtree.sh" to grab a snapshot of the build
-dependencies.
-
