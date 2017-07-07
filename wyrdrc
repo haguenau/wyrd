@@ -19,6 +19,16 @@ set edit_any_command="$EDITOR \"%file%\""
 set timed_template="REM %monname% %mday% %year% AT %hour%:%min% DURATION 1:00 MSG "
 set untimed_template="REM %monname% %mday% %year% MSG "
 
+## The following are used when expanding %monname%, etc.:
+set monname_fmt  = "%s"
+set mon_fmt      = "%d"
+set mday_fmt     = "%d"
+set year_fmt     = "%d"
+set hour_fmt     = "%02d"
+set min_fmt      = "%02d"
+set wdayname_fmt = "%s"
+set wday_fmt     = "%d"
+
 # weekly recurrence
 set template0="REM %wdayname% AT %hour%:%min% DURATION 1:00 MSG "
 set template1="REM %wdayname% MSG "
