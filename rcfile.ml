@@ -94,6 +94,26 @@ let template6        = ref None
 let template7        = ref None
 let template8        = ref None
 let template9        = ref None
+
+
+(* Helper functions for placeholder formats *)
+let string_string_to_format:
+      string -> (string -> string, unit, string) format =
+  fun s -> Scanf.format_from_string s "%s"
+let int_string_to_format:
+      string -> (int -> string, unit, string) format =
+  fun s -> Scanf.format_from_string s "%d"
+
+(* Default placeholder formats *)
+let monname_fmt  = ref (string_string_to_format "%s")
+and mon_fmt      = ref (int_string_to_format "%d")
+and mday_fmt     = ref (int_string_to_format "%d")
+and year_fmt     = ref (int_string_to_format "%d")
+and hour_fmt     = ref (int_string_to_format "%02d")
+and min_fmt      = ref (int_string_to_format "%02d")
+and wdayname_fmt = ref (string_string_to_format "%s")
+and wday_fmt     = ref (int_string_to_format "%d")
+
 (* algorithm to use for counting busy-ness *)
 let busy_algorithm = ref 1
 (* number of minutes to assume an untimed reminder requires *)
@@ -559,6 +579,24 @@ let parse_line line_stream =
          parse_set "advance_warning" advance_warning bool_of_string "Expected a boolean string after "
       | [< 'Ident "untimed_bold" >] ->
          parse_set "untimed_bold" untimed_bold bool_of_string "Expected a boolean string after "
+
+      | [< 'Ident "monname_fmt" >] ->
+         parse_set "monname_fmt" monname_fmt string_string_to_format "Expected a string-accepting format string after "
+      | [< 'Ident "mon_fmt" >] ->
+         parse_set "mon_fmt" mon_fmt int_string_to_format "Expected an int-accepting format string after "
+      | [< 'Ident "mday_fmt" >] ->
+         parse_set "mday_fmt" mday_fmt int_string_to_format "Expected an int-accepting format string after "
+      | [< 'Ident "year_fmt" >] ->
+         parse_set "year_fmt" year_fmt int_string_to_format "Expected an int-accepting format string after "
+      | [< 'Ident "hour_fmt" >] ->
+         parse_set "hour_fmt" hour_fmt int_string_to_format "Expected an int-accepting format string after "
+      | [< 'Ident "min_fmt" >] ->
+         parse_set "min_fmt" min_fmt int_string_to_format "Expected an int-accepting format string after "
+      | [< 'Ident "wdayname_fmt" >] ->
+         parse_set "wdayname_fmt" wdayname_fmt string_string_to_format "Expected a string-accepting format string after "
+      | [< 'Ident "wday_fmt" >] ->
+         parse_set "wday_fmt" wday_fmt int_string_to_format "Expected an int-accepting format string after "
+
       | [< >] ->
          config_failwith ("Unmatched variable name after \"set\"")
       end

@@ -613,16 +613,7 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
    let tm = Unix.localtime ts in
    (* take care of the substitution characters in remline templates *)
    let substitute template =
-      let monname_fmt =  format_of_string "%s"
-      and mon_fmt =      format_of_string "%d"
-      and mday_fmt =     format_of_string "%d"
-      and year_fmt =     format_of_string "%d"
-      and hour_fmt =     format_of_string "%02d"
-      and min_fmt =      format_of_string "%02d"
-      and wdayname_fmt = format_of_string "%s"
-      and wday_fmt =     format_of_string "%d"
-      in
-      let rec substitute_aux subst_list s =
+     let rec substitute_aux subst_list s =
          match subst_list with
          |[] ->
             s
@@ -631,17 +622,17 @@ let handle_new_reminder (iface : interface_state_t) reminders rem_type
             substitute_aux tail new_s
       in
       substitute_aux [
-         (Str.regexp "%monname%", Printf.sprintf monname_fmt
+         (Str.regexp "%monname%", Printf.sprintf !Rcfile.monname_fmt
              (Utility.string_of_tm_mon tm.Unix.tm_mon));
-         (Str.regexp "%mon%", Printf.sprintf mon_fmt (succ tm.Unix.tm_mon));
-         (Str.regexp "%mday%", Printf.sprintf mday_fmt tm.Unix.tm_mday);
-         (Str.regexp "%year%", Printf.sprintf year_fmt
+         (Str.regexp "%mon%", Printf.sprintf !Rcfile.mon_fmt (succ tm.Unix.tm_mon));
+         (Str.regexp "%mday%", Printf.sprintf !Rcfile.mday_fmt tm.Unix.tm_mday);
+         (Str.regexp "%year%", Printf.sprintf !Rcfile.year_fmt
              (tm.Unix.tm_year + 1900));
-         (Str.regexp "%hour%", Printf.sprintf hour_fmt tm.Unix.tm_hour);
-         (Str.regexp "%min%", Printf.sprintf min_fmt tm.Unix.tm_min);
-         (Str.regexp "%wdayname%", Printf.sprintf wdayname_fmt
+         (Str.regexp "%hour%", Printf.sprintf !Rcfile.hour_fmt tm.Unix.tm_hour);
+         (Str.regexp "%min%", Printf.sprintf !Rcfile.min_fmt tm.Unix.tm_min);
+         (Str.regexp "%wdayname%", Printf.sprintf !Rcfile.wdayname_fmt
              (Utility.string_of_tm_wday tm.Unix.tm_wday));
-         (Str.regexp "%wday%", Printf.sprintf wday_fmt tm.Unix.tm_wday)
+         (Str.regexp "%wday%", Printf.sprintf !Rcfile.wday_fmt tm.Unix.tm_wday)
       ] template
    in
    try
