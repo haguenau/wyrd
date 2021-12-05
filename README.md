@@ -1,3 +1,12 @@
+# Obsolescence notice
+
+As of 2021-11, I do not intend to make any changes to this GitHub
+repository anymore.
+
+Development is moved to [GitLab
+wyrd-calendar/wyrd](https://gitlab.com/wyrd-calendar/wyrd/), which is
+meant to be used as an upstream by Debian.
+
 # Wyrd "flexible formats" fork
 
 Wyrd is a curses front-end to remind. It is written in OCaml.
